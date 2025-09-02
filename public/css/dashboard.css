@@ -1,0 +1,248 @@
+:root {
+	--border: #e5e7eb;
+	--muted: #6b7280;
+	--text: #111827;
+	--bg: #ffffff;
+	--panel: #f9fafb;
+}
+
+/* Global base */
+* {
+	box-sizing: border-box
+}
+
+body {
+	margin: 0;
+	font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+	background: #f8fafc;
+	color: var(--text);
+}
+
+/*
+  Top Navigation
+  - 3 columns: brand | search | icons
+*/
+.topnav {
+	height: 56px;
+	background: #fff;
+	border-bottom: 1px solid var(--border);
+	display: grid;
+	grid-template-columns: 200px 1fr 280px;
+	align-items: center;
+	padding: 0 16px;
+	gap: 16px;
+	position: sticky;
+	top: 0;
+	z-index: 10;
+}
+
+.topnav .brand {
+	font-weight: 800
+}
+
+.topnav .search input {
+	width: 1000px;
+	height: 34px;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	padding: 0 10px
+}
+
+.topnav .navicons a {
+	margin-left: 16px;
+	color: var(--muted);
+	text-decoration: none
+}
+
+/*
+  Page Layout
+  - Sidebar + Content area
+*/
+.layout {
+	display: grid;
+	grid-template-columns: 220px 1fr;
+	gap: 16px;
+	max-width: 1200px;
+	/* move container a bit towards the left */
+	margin: 16px 24px 200px 12px;
+	padding: 0 12px
+}
+
+/* Sidebar */
+.sidebar {
+	background: #fff;
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	padding: 16px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between
+}
+
+.sidebar ul {
+	list-style: none;
+	margin: 0;
+	padding: 0
+}
+
+.sidebar li {
+	padding: 10px 8px;
+	border-radius: 8px;
+	color: #374151
+}
+
+.sidebar li.active {
+	background: #eef2ff;
+	font-weight: 600
+}
+
+.sidebar .logout {
+	margin-top: 16px;
+	height: 36px;
+	border-radius: 10px;
+	border: 1px solid #000;
+	background: #111;
+	color: #fff;
+	font-weight: 600;
+	cursor: pointer
+}
+
+/* Content area */
+.content {
+	display: block
+}
+
+.content h1 {
+	margin: 0 0 12px 0;
+	font-size: 20px
+}
+
+/* First row: schedule + metrics */
+.row {
+	display: grid;
+	grid-template-columns: 1fr 360px;
+	gap: 16px;
+	margin-bottom: 16px
+}
+
+/* Card primitive */
+.card {
+	background: #fff;
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	padding: 14px
+}
+
+/* Make the shipments table card span the full content width */
+.table-card{width:1300px}
+.table-card{height: 500px;}
+
+/* Delivery schedule mini-calendar */
+.schedule .days {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 10px;
+	margin-top: 10px
+}
+
+.schedule .day {
+	height: 54px;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--panel)
+}
+
+/* Metrics list */
+.metrics .metrics-list {
+	list-style: none;
+	margin: 0;
+	padding: 0
+}
+
+.metrics .metrics-list li {
+	height: 28px;
+	border-bottom: 1px solid var(--border);
+	display: flex;
+	align-items: center;
+	font-size: 13px;
+	color: var(--muted)
+}
+
+/* Shipments table */
+.table-card .table-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 8px
+}
+
+.table-card .add-link {
+	text-decoration: none;
+	color: #111;
+	background: #f3f4f6;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	padding: 6px 10px;
+	font-weight: 600
+}
+
+table.table {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0 8px
+}
+
+table.table thead th {
+	text-align: left;
+	font-size: 12px;
+	color: var(--muted)
+}
+
+table.table tbody tr {
+	background: var(--panel)
+}
+
+table.table tbody td {
+	padding: 10px;
+	border-top: 1px solid var(--border);
+	border-bottom: 1px solid var(--border)
+}
+
+table.table tbody tr td:first-child {
+	border-left: 1px solid var(--border);
+	border-top-left-radius: 8px;
+	border-bottom-left-radius: 8px
+}
+
+table.table tbody tr td:last-child {
+	border-right: 1px solid var(--border);
+	border-top-right-radius: 8px;
+	border-bottom-right-radius: 8px
+}
+
+table.table a {
+	text-decoration: none;
+	color: #111
+}
+
+/* Responsive tweaks */
+@media (max-width: 1024px) {
+	.layout {
+		grid-template-columns: 1fr
+	}
+
+	.row {
+		grid-template-columns: 1fr
+	}
+
+	.sidebar {
+		order: 2
+	}
+
+	.content {
+		order: 1
+	}
+}
