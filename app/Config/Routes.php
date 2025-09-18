@@ -8,6 +8,8 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Login::index');
 // Login page route
 $routes->get('login', 'Login::index');
+// Login submit
+$routes->post('login', 'Login::authenticate');
 // Dashboard (UI only)
 $routes->get('logistic_dashboard', 'Dashboard::index');
 // Admin UI-only dashboards
