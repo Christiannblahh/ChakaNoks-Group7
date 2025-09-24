@@ -46,8 +46,7 @@ class UserSeeder extends Seeder
                 'fname'     => 'Liam',
                 'lname'     => 'Logistics',
                 'email'     => 'logistics.coord@example.com',
-                'password'  => pasgit commit -m "Your commit message"
-sword_hash('Password123!', PASSWORD_DEFAULT),
+                'password'  => password_hash('Password123!', PASSWORD_DEFAULT),
                 'role'      => 'Logistics Coordinator',
                 'branch_id' => null,
             ],
