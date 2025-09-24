@@ -16,8 +16,8 @@
 			<input type="text" placeholder="Search inventory, suppliers, orders...">
 		</div>
 		<nav class="navicons">
-			<a href="#">Notifications</a>
-			<a href="#">Messages</a>
+			<a href="<?= site_url('pages/notifications') ?>">Notifications</a>
+			<a href="<?= site_url('pages/messages') ?>">Messages</a>
 		</nav>
 	</header>
 
@@ -25,12 +25,12 @@
 		<aside class="sidebar">
 			<ul>
 				<li class="active">Dashboard</li>
-				<li>Shipments</li>
-				<li>Routes</li>
-				<li>Suppliers</li>
-				<li>Settings</li>
+				<li><a href="<?= site_url('pages/shipments') ?>">Shipments</a></li>
+				<li><a href="<?= site_url('pages/routes') ?>">Routes</a></li>
+				<li><a href="<?= site_url('pages/suppliers') ?>">Suppliers</a></li>
+				<li><a href="<?= site_url('pages/settings') ?>">Settings</a></li>
 			</ul>
-			<button class="logout">Log Out</button>
+			<a class="logout" href="<?= site_url('logout') ?>">Log Out</a>
 		</aside>
 
 		<main class="content">

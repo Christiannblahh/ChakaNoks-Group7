@@ -16,8 +16,8 @@
 			<input type="text" placeholder="Search inventory, suppliers, orders...">
 		</div>
 		<nav class="navicons">
-			<a href="#">Notifications</a>
-			<a href="#">Messages</a>
+			<a href="<?= site_url('pages/notifications') ?>">Notifications</a>
+			<a href="<?= site_url('pages/messages') ?>">Messages</a>
 		</nav>
 	</header>
 
@@ -25,11 +25,11 @@
 		<aside class="sidebar">
 			<ul>
 				<li class="active">Dashboard</li>
-				<li>Users</li>
-				<li>Backups</li>
-				<li>Settings</li>
+				<li><a href="<?= site_url('pages/users') ?>">Users</a></li>
+				<li><a href="<?= site_url('pages/backups') ?>">Backups</a></li>
+				<li><a href="<?= site_url('pages/settings') ?>">Settings</a></li>
 			</ul>
-			<button class="logout">Log Out</button>
+			<a class="logout" href="<?= site_url('logout') ?>">Log Out</a>
 		</aside>
 
 		<main class="content">
@@ -53,10 +53,10 @@
 			<div class="row">
 				<section class="card" style="height:220px">
 					<h2>User Account Controls</h2>
-					<div style="display:flex;gap:24px;margin-top:10px">
-						<button class="chip">Manage Roles</button>
-						<button class="chip">Reset Password</button>
-					</div>
+			<div style="display:flex;gap:24px;margin-top:10px">
+				<a class="chip" href="<?= site_url('pages/users') ?>">Manage Roles</a>
+				<a class="chip" href="<?= site_url('pages/users') ?>">Reset Password</a>
+			</div>
 					<div style="margin-top:14px;color:#6b7280;font-size:12px">Recent User Activity</div>
 					<div class="activity-row">
 						<span>name</span>
@@ -72,12 +72,17 @@
 					</div>
 				</section>
 				<section class="card" style="height:220px">
-					<h2>Backup Tools</h2>
-					<div style="display:flex;gap:10px;margin-top:10px">
-						<button class="chip">Initiate Backup</button>
-						<button class="chip">View Backups</button>
-						<button class="chip">Restore Data</button>
-					</div>
+				<h2>Backup Tools</h2>
+				<div style="display:flex;gap:10px;margin-top:10px;align-items:center">
+					<form method="post" action="<?= site_url('pages/backups/initiate') ?>">
+						<button class="chip" type="submit">Initiate Backup</button>
+					</form>
+					<a class="chip" href="<?= site_url('pages/backups') ?>">View Backups</a>
+					<form method="post" action="<?= site_url('pages/backups/restore') ?>" style="display:flex;gap:6px;align-items:center">
+						<input name="backup_id" type="text" placeholder="# id" style="height:32px;padding:4px 8px;border:1px solid var(--border);border-radius:8px">
+						<button class="chip" type="submit">Restore Data</button>
+					</form>
+				</div>
 					<div style="margin-top:14px;color:#6b7280;font-size:12px">Last Backup Status</div>
 					<div style="margin-top:6px">success &nbsp; ( date, time )</div>
 				</section>

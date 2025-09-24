@@ -16,8 +16,8 @@
 			<input type="text" placeholder="Search inventory, suppliers, orders...">
 		</div>
 		<nav class="navicons">
-			<a href="#">Notifications</a>
-			<a href="#">Messages</a>
+			<a href="<?= site_url('pages/notifications') ?>">Notifications</a>
+			<a href="<?= site_url('pages/messages') ?>">Messages</a>
 		</nav>
 	</header>
 
@@ -25,11 +25,11 @@
 		<aside class="sidebar">
 			<ul>
 				<li class="active">Dashboard</li>
-				<li>Requests</li>
-				<li>Transfers</li>
-				<li>Settings</li>
+				<li><a href="<?= site_url('branch/requests') ?>">Requests</a></li>
+				<li><a href="<?= site_url('branch/transfers') ?>">Transfers</a></li>
+				<li><a href="<?= site_url('branch/settings') ?>">Settings</a></li>
 			</ul>
-			<button class="logout">Log Out</button>
+			<a class="logout" href="<?= site_url('logout') ?>">Log Out</a>
 		</aside>
 
 		<main class="content">
