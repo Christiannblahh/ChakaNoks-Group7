@@ -29,6 +29,8 @@ $routes->get('pages/routes', 'Pages::routes');
 $routes->get('pages/suppliers', 'Pages::suppliers');
 $routes->get('pages/notifications', 'Pages::notifications');
 $routes->get('pages/messages', 'Pages::messages');
+$routes->get('pages/inventory', 'Pages::inventory');
+$routes->get('pages/reports', 'Pages::reports');
 
 // Logout
 $routes->get('logout', 'Pages::logout');

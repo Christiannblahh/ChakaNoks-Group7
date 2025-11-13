@@ -49,6 +49,16 @@ class Pages extends BaseController
 		return view('pages/messages');
 	}
 
+	public function inventory()
+	{
+		return view('pages/inventory');
+	}
+
+	public function reports()
+	{
+		return view('pages/reports');
+	}
+
     // Branch Manager pages
     public function branchRequests()
     {
