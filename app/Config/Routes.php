@@ -47,3 +47,11 @@ $routes->get('branch/transfers', 'Pages::branchTransfers');
 $routes->get('branch/settings', 'Pages::branchSettings');
 $routes->post('branch/requests/create', 'Pages::branchCreateRequest');
 $routes->post('branch/transfers/create', 'Pages::branchCreateTransfer');
+
+// Inventory AJAX routes
+$routes->get('inventory/get', 'Pages::getInventory');
+$routes->post('inventory/add', 'Pages::addInventoryItem');
+$routes->post('inventory/update', 'Pages::updateInventoryItem');
+$routes->post('inventory/delete', 'Pages::deleteInventoryItem');
+$routes->get('inventory/low-stock', 'Pages::getLowStockAlerts');
+$routes->get('inventory/settings', 'Inventory::settings');

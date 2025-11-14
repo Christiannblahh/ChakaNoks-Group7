@@ -1,0 +1,30 @@
+# TODO: Remove 'public' from URL
+
+- [ ] Move public/index.php to root/index.php and update require path to './app/Config/Paths.php'
+- [ ] Move public/.htaccess to root/.htaccess (replace existing)
+- [ ] Move public/css/ to root/css/
+- [ ] Move public/favicon.ico to root
+- [ ] Move public/robots.txt to root
+- [ ] Update view files: change link_tag('public/css/...') to link_tag('css/...')
+  - [ ] admin_dashboard.php
+  - [ ] branch_dashboard.php
+  - [ ] franchise_dashboard.php
+  - [ ] inventory_dashboard.php
+  - [ ] login.php
+  - [ ] supplier_dashboard.php
+  - [ ] pages/backups.php
+  - [ ] pages/messages.php
+  - [ ] pages/inventory.php
+  - [ ] pages/notifications.php
+  - [ ] pages/reports.php
+  - [ ] logistic_dashboard.php
+  - [ ] pages/routes.php
+  - [ ] pages/suppliers.php
+  - [ ] pages/users.php
+  - [ ] pages/shipments.php
+  - [ ] pages/settings.php
+  - [ ] branch/requests.php
+  - [ ] branch/settings.php
+  - [ ] branch/transfers.php
+- [ ] Delete the empty public/ directory
+- [ ] Test the application at http://localhost/ChakaNoks/

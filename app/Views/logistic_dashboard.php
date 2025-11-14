@@ -7,7 +7,22 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-	<?= link_tag('public/css/dashboard.css') ?>
+	<?= link_tag('css/dashboard.css') ?>
+	<script>
+		function showSchedule(day) {
+			alert('Showing delivery schedule for ' + day);
+		}
+
+		function showMetric(metric) {
+			const metricNames = {
+				'avg-time': 'Average Delivery Time',
+				'distance': 'Optimized vs. Actual Distance',
+				'fuel': 'Fuel Efficiency',
+				'on-time': 'On-Time Delivery Rate'
+			};
+			alert('Showing details for: ' + metricNames[metric]);
+		}
+	</script>
 </head>
 <body>
 	<header class="topnav">
@@ -39,22 +54,22 @@
 				<section class="card schedule">
 					<h2>Delivery Schedule</h2>
 					<div class="days">
-						<div class="day">Mon 11</div>
-						<div class="day">Tue 12</div>
-						<div class="day">Wed 13</div>
-						<div class="day">Thu 14</div>
-						<div class="day">Fri 15</div>
-						<div class="day">Sat 16</div>
-						<div class="day">Sun 17</div>
+						<div class="day clickable" onclick="showSchedule('Mon')">Mon 11</div>
+						<div class="day clickable" onclick="showSchedule('Tue')">Tue 12</div>
+						<div class="day clickable" onclick="showSchedule('Wed')">Wed 13</div>
+						<div class="day clickable" onclick="showSchedule('Thu')">Thu 14</div>
+						<div class="day clickable" onclick="showSchedule('Fri')">Fri 15</div>
+						<div class="day clickable" onclick="showSchedule('Sat')">Sat 16</div>
+						<div class="day clickable" onclick="showSchedule('Sun')">Sun 17</div>
 					</div>
 				</section>
 				<section class="card metrics">
 					<h2>Route Performance Metrics</h2>
 					<ul class="metrics-list">
-						<li>Average Delivery Time</li>
-						<li>Optimized vs. Actual Distance</li>
-						<li>Fuel Efficiency</li>
-						<li>On-Time Delivery Rate</li>
+						<li class="metric-item clickable" onclick="showMetric('avg-time')">Average Delivery Time</li>
+						<li class="metric-item clickable" onclick="showMetric('distance')">Optimized vs. Actual Distance</li>
+						<li class="metric-item clickable" onclick="showMetric('fuel')">Fuel Efficiency</li>
+						<li class="metric-item clickable" onclick="showMetric('on-time')">On-Time Delivery Rate</li>
 					</ul>
 				</section>
 			</div>

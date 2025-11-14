@@ -88,7 +88,13 @@ body {
 .sidebar li {
 	padding: 10px 8px;
 	border-radius: 8px;
-	color: #374151
+	color: #374151;
+	cursor: pointer;
+	transition: background-color 0.2s ease
+}
+
+.sidebar li:hover {
+	background: #f3f4f6
 }
 
 .sidebar li.active {
@@ -155,6 +161,16 @@ body {
 	background: var(--panel)
 }
 
+.schedule .day.clickable {
+	cursor: pointer;
+	transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.schedule .day.clickable:hover {
+	background: #e5e7eb;
+	transform: scale(1.02);
+}
+
 /* Metrics list */
 .metrics .metrics-list {
 	list-style: none;
@@ -169,6 +185,16 @@ body {
 	align-items: center;
 	font-size: 13px;
 	color: var(--muted)
+}
+
+.metrics .metric-item.clickable {
+	cursor: pointer;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.metrics .metric-item.clickable:hover {
+	background: #f3f4f6;
+	color: var(--text);
 }
 
 /* Shipments table */

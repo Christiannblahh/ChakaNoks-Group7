@@ -54,6 +54,89 @@ class Pages extends BaseController
 		return view('pages/inventory');
 	}
 
+	// Get inventory data for AJAX
+	public function getInventory()
+	{
+		$inventoryModel = new \App\Models\InventoryModel();
+		$branchId = session()->get('branch_id') ?? 1; // Default to branch 1 for demo
+
+		$inventory = $inventoryModel->getInventoryByBranch($branchId);
+
+		return $this->response->setJSON($inventory);
+	}
+
+	// Add new inventory item
+	public function addInventoryItem()
+	{
+		$request = service('request');
+		$inventoryModel = new \App\Models\InventoryModel();
+
+		$data = [
+			'branch_id' => session()->get('branch_id') ?? 1,
+			'item_name' => $request->getPost('item_name'),
+			'item_description' => $request->getPost('item_description'),
+			'unit' => $request->getPost('unit'),
+			'quantity' => (int) $request->getPost('quantity'),
+			'reorder_level' => (int) $request->getPost('reorder_level'),
+			'expiry_date' => $request->getPost('expiry_date') ?: null,
+		];
+
+		if ($inventoryModel->addItem($data)) {
+			return $this->response->setJSON(['success' => true, 'message' => 'Item added successfully']);
+		} else {
+			return $this->response->setJSON(['success' => false, 'message' => 'Failed to add item']);
+		}
+	}
+
+	// Update inventory item
+	public function updateInventoryItem()
+	{
+		$request = service('request');
+		$inventoryModel = new \App\Models\InventoryModel();
+
+		$inventoryId = $request->getPost('inventory_id');
+		$data = [
+			'item_name' => $request->getPost('item_name'),
+			'item_description' => $request->getPost('item_description'),
+			'unit' => $request->getPost('unit'),
+			'quantity' => (int) $request->getPost('quantity'),
+			'reorder_level' => (int) $request->getPost('reorder_level'),
+			'expiry_date' => $request->getPost('expiry_date') ?: null,
+		];
+
+		if ($inventoryModel->updateItem($inventoryId, $data)) {
+			return $this->response->setJSON(['success' => true, 'message' => 'Item updated successfully']);
+		} else {
+			return $this->response->setJSON(['success' => false, 'message' => 'Failed to update item']);
+		}
+	}
+
+	// Delete inventory item
+	public function deleteInventoryItem()
+	{
+		$request = service('request');
+		$inventoryModel = new \App\Models\InventoryModel();
+
+		$inventoryId = $request->getPost('inventory_id');
+
+		if ($inventoryModel->deleteItem($inventoryId)) {
+			return $this->response->setJSON(['success' => true, 'message' => 'Item deleted successfully']);
+		} else {
+			return $this->response->setJSON(['success' => false, 'message' => 'Failed to delete item']);
+		}
+	}
+
+	// Get low stock alerts
+	public function getLowStockAlerts()
+	{
+		$inventoryModel = new \App\Models\InventoryModel();
+		$branchId = session()->get('branch_id') ?? 1;
+
+		$lowStockItems = $inventoryModel->getLowStockItems($branchId);
+
+		return $this->response->setJSON($lowStockItems);
+	}
+
 	public function reports()
 	{
 		return view('pages/reports');
