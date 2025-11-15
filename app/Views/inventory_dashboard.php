@@ -38,9 +38,34 @@
 		function updateStock(sku) {
 			const newStock = prompt(`Enter new stock quantity for ${sku}:`);
 			if (newStock !== null && !isNaN(newStock)) {
-				alert(`Stock updated for ${sku}: ${newStock} units`);
-				// In a real implementation, this would update the database
-				location.reload(); // Simulate refresh
+				// Find the row with matching SKU and update the stock quantity
+				const rows = document.querySelectorAll('.inventory-row');
+				rows.forEach(row => {
+					const skuCell = row.cells[1]; // SKU is in the second column (index 1)
+					if (skuCell.textContent === sku) {
+						const stockCell = row.cells[2]; // Stock quantity is in the third column (index 2)
+						const statusCell = row.cells[3]; // Status is in the fourth column (index 3)
+
+						// Update the stock quantity
+						stockCell.textContent = newStock;
+
+						// Update the status based on new stock level
+						const stockNum = parseInt(newStock);
+						if (stockNum > 50) {
+							statusCell.className = 'status-good';
+							statusCell.textContent = 'In Stock';
+						} else if (stockNum > 0) {
+							statusCell.className = 'status-low';
+							statusCell.textContent = 'Low Stock';
+						} else {
+							statusCell.className = 'status-out';
+							statusCell.textContent = 'Out of Stock';
+						}
+
+						alert(`Stock updated for ${sku}: ${newStock} units`);
+						// In a real implementation, this would update the database
+					}
+				});
 			}
 		}
 
@@ -80,6 +105,8 @@
 				statusDiv.textContent = `${supplier}: ${randomStatus}`;
 			}, 1500);
 		}
+
+
 
 		// Simulate real-time updates
 		setInterval(() => {
@@ -147,33 +174,53 @@
 						</thead>
 						<tbody id="inventoryBody">
 							<tr class="inventory-row" data-stock="150">
-								<td>Widget A</td>
-								<td>WID-001</td>
+								<td>Grilled Chicken Breast</td>
+								<td>CHK-001</td>
 								<td>150</td>
 								<td class="status-good">In Stock</td>
 								<td>
-									<button class="action-btn update-btn" onclick="updateStock('WID-001')">Update</button>
-									<button class="action-btn alert-btn" onclick="setAlert('WID-001')">Alert</button>
+									<button class="action-btn update-btn" onclick="updateStock('CHK-001')">Update</button>
+									<button class="action-btn alert-btn" onclick="setAlert('CHK-001')">Alert</button>
 								</td>
 							</tr>
 							<tr class="inventory-row" data-stock="25">
-								<td>Gadget B</td>
-								<td>GAD-002</td>
+								<td>Chicken Wings</td>
+								<td>CHK-002</td>
 								<td>25</td>
 								<td class="status-low">Low Stock</td>
 								<td>
-									<button class="action-btn update-btn" onclick="updateStock('GAD-002')">Update</button>
-									<button class="action-btn alert-btn" onclick="setAlert('GAD-002')">Alert</button>
+									<button class="action-btn update-btn" onclick="updateStock('CHK-002')">Update</button>
+									<button class="action-btn alert-btn" onclick="setAlert('CHK-002')">Alert</button>
 								</td>
 							</tr>
 							<tr class="inventory-row" data-stock="0">
-								<td>Tool C</td>
-								<td>TOOL-003</td>
+								<td>Chicken Nuggets</td>
+								<td>CHK-003</td>
 								<td>0</td>
 								<td class="status-out">Out of Stock</td>
 								<td>
-									<button class="action-btn update-btn" onclick="updateStock('TOOL-003')">Update</button>
-									<button class="action-btn alert-btn" onclick="setAlert('TOOL-003')">Alert</button>
+									<button class="action-btn update-btn" onclick="updateStock('CHK-003')">Update</button>
+									<button class="action-btn alert-btn" onclick="setAlert('CHK-003')">Alert</button>
+								</td>
+							</tr>
+							<tr class="inventory-row" data-stock="80">
+								<td>Chicken Tenders</td>
+								<td>CHK-004</td>
+								<td>80</td>
+								<td class="status-good">In Stock</td>
+								<td>
+									<button class="action-btn update-btn" onclick="updateStock('CHK-004')">Update</button>
+									<button class="action-btn alert-btn" onclick="setAlert('CHK-004')">Alert</button>
+								</td>
+							</tr>
+							<tr class="inventory-row" data-stock="45">
+								<td>Chicken Strips</td>
+								<td>CHK-005</td>
+								<td>45</td>
+								<td class="status-low">Low Stock</td>
+								<td>
+									<button class="action-btn update-btn" onclick="updateStock('CHK-005')">Update</button>
+									<button class="action-btn alert-btn" onclick="setAlert('CHK-005')">Alert</button>
 								</td>
 							</tr>
 						</tbody>
@@ -236,6 +283,8 @@
 		/* Chip buttons */
 		.chip{padding:6px 12px;border:1px solid var(--border);border-radius:16px;background:#f3f4f6;font-size:12px;font-weight:600;cursor:pointer}
 		.chip:hover{background:#e5e7eb}
+
+
 	</style>
 
 </body>
