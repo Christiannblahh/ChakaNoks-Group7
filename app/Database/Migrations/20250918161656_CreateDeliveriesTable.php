@@ -25,8 +25,8 @@ class CreateDeliveriesTable extends Migration
             'scheduled_date' => [
                 'type' => 'DATE',
             ],
-            'delivered_date' => [
-                'type' => 'DATE',
+            'delivered_at' => [
+                'type' => 'DATETIME',
                 'null' => true,
             ],
             'status' => [

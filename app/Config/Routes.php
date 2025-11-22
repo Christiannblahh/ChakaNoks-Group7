@@ -1,3 +1,4 @@
+$routes->post('delivery/mark-delivered/(:num)', 'Delivery::markDelivered/$1');
 <?php
 
 use CodeIgniter\Router\RouteCollection;
@@ -55,3 +56,10 @@ $routes->post('inventory/update', 'Pages::updateInventoryItem');
 $routes->post('inventory/delete', 'Pages::deleteInventoryItem');
 $routes->get('inventory/low-stock', 'Pages::getLowStockAlerts');
 $routes->get('inventory/settings', 'Inventory::settings');
+
+// Role-based settings routes
+$routes->get('settings/logistics', 'Pages::logisticsSettings');
+$routes->get('settings/inventory', 'Pages::inventorySettings');
+$routes->get('settings/branch', 'Pages::branchSettings');
+$routes->get('settings/franchise', 'Pages::franchiseSettings');
+$routes->get('settings/supplier', 'Pages::supplierSettings');
