@@ -10,9 +10,83 @@ class Pages extends BaseController
 	}
 
 	public function users()
-	{
-        return view('pages/users');
-	}
+    {
+        $userModel = new \App\Models\UserModel();
+        $users = $userModel->withDeleted()->findAll();
+        return view('pages/users', ['users' => $users]);
+    }
+
+    public function restoreUser($user_id)
+    {
+        $session = session();
+        if ($session->get('user_id') == $user_id) {
+            return redirect()->to(site_url('pages/users'))->with('error', 'You cannot restore your own account.');
+        }
+        $userModel = new \App\Models\UserModel();
+        $user = $userModel->withDeleted()->find($user_id);
+        if ($user && $user['deleted_at']) {
+            $userModel->update($user_id, ['deleted_at' => null]);
+            return redirect()->to(site_url('pages/users'))->with('success', 'User restored.');
+        }
+        return redirect()->to(site_url('pages/users'))->with('error', 'User not found or not deleted.');
+    }
+
+    public function editUser($user_id)
+    {
+        $userModel = new \App\Models\UserModel();
+        $request = service('request');
+        $session = session();
+        // Prevent editing self
+        if ($session->get('user_id') == $user_id) {
+            return redirect()->to(site_url('pages/users'))->with('error', 'You cannot edit your own account.');
+        }
+        $user = $userModel->find($user_id);
+        if (!$user) {
+            return view('pages/edit_user', ['user' => null]);
+        }
+        if ($request->getMethod() === 'post') {
+            $name = trim((string) $request->getPost('name'));
+            $email = trim((string) $request->getPost('email'));
+            $role = trim((string) $request->getPost('role'));
+            if ($name === '' || $email === '' || $role === '') {
+                return view('pages/edit_user', ['user' => $user, 'error' => 'All fields are required.']);
+            }
+            $parts = preg_split('/\\s+/', $name, 2);
+            $fname = $parts[0] ?? '';
+            $lname = $parts[1] ?? '';
+            // Prevent email conflict
+            $existing = $userModel->where('email', $email)->where('user_id !=', $user_id)->first();
+            if ($existing) {
+                return view('pages/edit_user', ['user' => $user, 'error' => 'Email already exists.']);
+            }
+            $userModel->update($user_id, [
+                'fname' => $fname,
+                'lname' => $lname,
+                'email' => $email,
+                'role' => $role
+            ]);
+            $session->setFlashdata('success', 'User updated.');
+            return redirect()->to(site_url('pages/users'));
+        }
+        return view('pages/edit_user', ['user' => $user]);
+    }
+
+    public function deleteUser($user_id)
+    {
+        $session = session();
+        if ($session->get('user_id') == $user_id) {
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['success' => false, 'error' => 'You cannot delete your own account.']);
+            }
+            return redirect()->to(site_url('pages/users'))->with('error', 'You cannot delete your own account.');
+        }
+        $userModel = new \App\Models\UserModel();
+        $userModel->delete($user_id);
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['success' => true]);
+        }
+        return redirect()->to(site_url('pages/users'))->with('success', 'User deleted.');
+    }
 
 	public function backups()
 	{
@@ -327,13 +401,48 @@ $stockRecordModel->insert([
         $name = trim((string) $request->getPost('name'));
         $email = trim((string) $request->getPost('email'));
         $role = trim((string) $request->getPost('role'));
+        $password = (string) $request->getPost('password');
 
-        if ($name === '' || $email === '' || $role === '') {
+        if ($name === '' || $email === '' || $role === '' || $password === '') {
             return redirect()->back()->with('error', 'All fields are required.');
         }
 
-        // Placeholder: integrate with database later
-        $session->setFlashdata('success', 'User created (simulation): ' . esc($name) . ' — ' . esc($role));
+        // Split name into fname/lname (simple split)
+        $parts = preg_split('/\s+/', $name, 2);
+        $fname = $parts[0] ?? '';
+        $lname = $parts[1] ?? '';
+
+        $userModel = new \App\Models\UserModel();
+        // Prevent duplicate Gmail (case-insensitive, ignore dots and plus aliases)
+        function normalize_gmail($email) {
+            $email = strtolower(trim($email));
+            if (strpos($email, '@gmail.com') !== false) {
+                list($local, $domain) = explode('@', $email, 2);
+                $local = preg_replace('/\+.*$/', '', $local); // remove +alias
+                $local = str_replace('.', '', $local); // remove dots
+                return $local . '@gmail.com';
+            }
+            return $email;
+        }
+        $normEmail = normalize_gmail($email);
+        $allUsers = $userModel->select('email')->findAll();
+        foreach ($allUsers as $u) {
+            if (normalize_gmail($u['email']) === $normEmail) {
+                return redirect()->back()->with('error', 'A user with this Gmail already exists.');
+            }
+        }
+
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $data = [
+            'fname' => $fname,
+            'lname' => $lname,
+            'email' => $email,
+            'role' => $role,
+            'password' => $hashedPassword,
+            'branch_id' => null,
+        ];
+        $userModel->insert($data);
+        $session->setFlashdata('created', 'User created successfully.');
         return redirect()->to(site_url('pages/users'));
     }
 

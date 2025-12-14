@@ -22,6 +22,10 @@ $routes->get('franchise_dashboard', 'Dashboard::franchise');
 
 // Navigation pages
 $routes->get('pages/users', 'Pages::users');
+$routes->get('pages/users/edit/(:num)', 'Pages::editUser/$1');
+$routes->post('pages/users/edit/(:num)', 'Pages::editUser/$1');
+$routes->post('pages/users/restore/(:num)', 'Pages::restoreUser/$1');
+$routes->post('pages/users/delete/(:num)', 'Pages::deleteUser/$1');
 $routes->get('pages/backups', 'Pages::backups');
 $routes->get('pages/settings', 'Pages::settings');
 $routes->get('pages/shipments', 'Pages::shipments');
