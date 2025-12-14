@@ -16,26 +16,26 @@
 			<input type="text" placeholder="Search inventory, suppliers, orders...">
 		</div>
 		<nav class="navicons">
-			<a href="#">Notifications</a>
-			<a href="#">Messages</a>
+			<a href="<?= site_url('pages/notifications') ?>">Notifications</a>
+			<a href="<?= site_url('pages/messages') ?>">Messages</a>
 		</nav>
 	</header>
 
 	<div class="layout">
 		<aside class="sidebar">
 			<ul>
-				<li class="active">Dashboard</li>
-				<li>Franchise Applications</li>
-				<li>Supply Allocation</li>
-				<li>Inventory Management</li>
-				<li>Order Management</li>
-				<li>Reports</li>
-				<li>Settings</li>
+				<li class="active"><a href="#top">Dashboard</a></li>
+				<li><a href="#applications">Franchise Applications</a></li>
+				<li><a href="#allocation">Supply Allocation</a></li>
+				<li><a href="#inventory">Inventory Management</a></li>
+				<li><a href="#orders">Order Management</a></li>
+				<li><a href="#reports">Reports</a></li>
+				<li><a href="#settings">Settings</a></li>
 			</ul>
-			<button class="logout">Log Out</button>
+			<a class="logout" href="<?= site_url('logout') ?>">Log Out</a>
 		</aside>
 
-		<main class="content">
+		<main class="content" id="top">
 			<h1>Franchise Dashboard</h1>
 			
 			<!-- Overview Cards Row -->
@@ -63,7 +63,7 @@
 			</div>
 
 			<!-- Franchise Applications Table -->
-			<section class="card table-card">
+			<section class="card table-card" id="applications">
 				<div class="table-head">
 					<h2>Franchise Applications</h2>
 				</div>
@@ -143,7 +143,7 @@
 			</section>
 
 			<!-- Supply Allocation Overview -->
-			<section class="card">
+			<section class="card" id="allocation">
 				<h2>Supply Allocation Overview</h2>
 				<div style="margin-top:12px">
 					<h3 style="font-size:14px;color:#6b7280;margin:0 0 8px 0">Recent Supply Requests</h3>
@@ -155,7 +155,7 @@
 							</div>
 							<div style="text-align:right">
 								<span class="status pending">Pending</span>
-								<a href="#" style="margin-left:8px;color:#111;text-decoration:none">View</a>
+								<a href="javascript:void(0)" class="view-request" style="margin-left:8px;color:#111;text-decoration:none">View</a>
 							</div>
 						</div>
 						<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
@@ -165,7 +165,7 @@
 							</div>
 							<div style="text-align:right">
 								<span class="status approved">Approved</span>
-								<a href="#" style="margin-left:8px;color:#111;text-decoration:none">View</a>
+								<a href="javascript:void(0)" class="view-request" style="margin-left:8px;color:#111;text-decoration:none">View</a>
 							</div>
 						</div>
 						<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
@@ -175,7 +175,7 @@
 							</div>
 							<div style="text-align:right">
 								<span class="status fulfilled">Fulfilled</span>
-								<a href="#" style="margin-left:8px;color:#111;text-decoration:none">View</a>
+								<a href="javascript:void(0)" class="view-request" style="margin-left:8px;color:#111;text-decoration:none">View</a>
 							</div>
 						</div>
 						<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
@@ -191,8 +191,38 @@
 					</div>
 				</div>
 			</section>
-		</main>
+		<!-- Placeholder anchors for sidebar sections not yet implemented as full modules -->
+		<div id="inventory"></div>
+		<div id="orders"></div>
+		<div id="reports"></div>
+		<div id="settings"></div>
+	</main>
 	</div>
+
+	<script>
+		// Simple demo handlers so buttons respond when clicked.
+		document.addEventListener('DOMContentLoaded', function () {
+			// Approve/Reject actions
+			document.querySelectorAll('.action-btn.approve').forEach(function (btn) {
+				btn.addEventListener('click', function () {
+					alert('Franchise application approved (demo action).');
+				});
+			});
+
+			document.querySelectorAll('.action-btn.reject').forEach(function (btn) {
+				btn.addEventListener('click', function () {
+					alert('Franchise application rejected (demo action).');
+				});
+			});
+
+			// View supply request details
+			document.querySelectorAll('.view-request').forEach(function (link) {
+				link.addEventListener('click', function () {
+					alert('Supply request details (demo view).');
+				});
+			});
+		});
+	</script>
 
 	<style>
 		/* Overview cards - 4 columns */
