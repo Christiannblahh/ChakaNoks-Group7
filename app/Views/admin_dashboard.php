@@ -39,7 +39,6 @@
 				<li><a href="<?= site_url('pages/shipments') ?>">Shipments</a></li>
 				<li><a href="<?= site_url('pages/reports') ?>">Reports</a></li>
 				<li><a href="<?= site_url('pages/backups') ?>">Backups</a></li>
-				<li><a href="<?= site_url('pages/settings') ?>">Settings</a></li>
 			</ul>
 			<a class="logout" href="<?= site_url('logout') ?>">Log Out</a>
 		</aside>

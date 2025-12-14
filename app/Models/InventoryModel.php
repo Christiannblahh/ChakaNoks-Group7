@@ -37,6 +37,30 @@ class InventoryModel extends Model
                     ->findAll();
     }
 
+    // Get items that have reached or passed their expiry date
+    public function getExpiredItems($branchId)
+    {
+        $currentDate = date('Y-m-d');
+
+        return $this->where('branch_id', $branchId)
+                    ->where('expiry_date IS NOT NULL', null, false)
+                    ->where('DATE(expiry_date) <=', $currentDate)
+                    ->findAll();
+    }
+
+    // Get items that will expire in the next 30 days (but not already expired)
+    public function getNearExpiryItems($branchId)
+    {
+        $currentDate = date('Y-m-d');
+        $next30 = date('Y-m-d', strtotime('+30 days'));
+
+        return $this->where('branch_id', $branchId)
+                    ->where('expiry_date IS NOT NULL', null, false)
+                    ->where('DATE(expiry_date) >', $currentDate)
+                    ->where('DATE(expiry_date) <=', $next30)
+                    ->findAll();
+    }
+
     // Update quantity
     public function updateQuantity($inventoryId, $newQuantity)
     {

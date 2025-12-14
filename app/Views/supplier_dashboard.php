@@ -27,7 +27,6 @@
 				<li class="active">Dashboard</li>
 				<li>Orders</li>
 				<li>Invoices</li>
-				<li>Settings</li>
 			</ul>
 			<button class="logout">Log Out</button>
 		</aside>

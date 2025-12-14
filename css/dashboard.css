@@ -59,13 +59,12 @@ body {
   - Sidebar + Content area
 */
 .layout {
-	display: grid;
-	grid-template-columns: 220px 1fr;
-	gap: 16px;
+	display: block;
 	max-width: 1200px;
 	/* move container a bit towards the left */
-	margin: 16px 24px 200px 12px;
-	padding: 0 12px
+	margin: 16px 24px 200px 248px;
+	padding: 0 12px;
+	position: relative;
 }
 
 /* Sidebar */
@@ -76,7 +75,13 @@ body {
 	padding: 16px;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between
+	justify-content: space-between;
+	position: fixed;
+	top: 72px;
+	left: 12px;
+	width: 220px;
+	height: calc(100vh - 88px);
+	z-index: 5;
 }
 
 .sidebar ul {
@@ -90,16 +95,37 @@ body {
 	border-radius: 8px;
 	color: #374151;
 	cursor: pointer;
-	transition: background-color 0.2s ease
+	transition: background-color 0.2s ease;
+	font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+	font-weight: 500;
+	font-size: 14px;
+}
+
+.sidebar li a {
+	color: #374151;
+	text-decoration: none;
+	display: block;
+	font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+	font-weight: 500;
+	font-size: 14px;
 }
 
 .sidebar li:hover {
 	background: #f3f4f6
 }
 
+.sidebar li:hover a {
+	color: #374151;
+}
+
 .sidebar li.active {
 	background: #eef2ff;
-	font-weight: 600
+	font-weight: 600;
+}
+
+.sidebar li.active a {
+	color: #4f46e5;
+	font-weight: 600;
 }
 
 .sidebar .logout {
@@ -110,7 +136,115 @@ body {
 	background: #111;
 	color: #fff;
 	font-weight: 600;
-	cursor: pointer
+	cursor: pointer;
+	font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+	font-size: 14px;
+}
+
+/* Global Button Styles */
+.btn, .chip, .action-btn {
+	font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+	font-weight: 600;
+	font-size: 14px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.btn {
+	height: 36px;
+	border-radius: 10px;
+	border: 1px solid #000;
+	background: #111;
+	color: #fff;
+	padding: 8px 16px;
+}
+
+.btn:hover {
+	background: #333;
+	border-color: #333;
+}
+
+.btn-secondary {
+	background: #f3f4f6;
+	color: #111;
+	border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+	background: #e5e7eb;
+	border-color: #d1d5db;
+}
+
+.chip {
+	padding: 6px 12px;
+	border: 1px solid var(--border);
+	border-radius: 16px;
+	background: #f3f4f6;
+	color: #374151;
+}
+
+.chip:hover {
+	background: #e5e7eb;
+	color: #111;
+}
+
+.action-btn {
+	padding: 4px 8px;
+	border-radius: 4px;
+	font-size: 12px;
+	margin-right: 4px;
+	border: 1px solid var(--border);
+	background: #f3f4f6;
+	color: #374151;
+}
+
+.action-btn:hover {
+	background: #e5e7eb;
+	color: #111;
+}
+
+.action-btn.update-btn {
+	background: #3b82f6;
+	color: #fff;
+	border-color: #3b82f6;
+}
+
+.action-btn.update-btn:hover {
+	background: #2563eb;
+	border-color: #2563eb;
+}
+
+.action-btn.alert-btn {
+	background: #f59e0b;
+	color: #fff;
+	border-color: #f59e0b;
+}
+
+.action-btn.alert-btn:hover {
+	background: #d97706;
+	border-color: #d97706;
+}
+
+.action-btn.approve {
+	background: #10b981;
+	color: #fff;
+	border-color: #10b981;
+}
+
+.action-btn.approve:hover {
+	background: #059669;
+	border-color: #059669;
+}
+
+.action-btn.reject {
+	background: #ef4444;
+	color: #fff;
+	border-color: #ef4444;
+}
+
+.action-btn.reject:hover {
+	background: #dc2626;
+	border-color: #dc2626;
 }
 
 /* Content area */
@@ -257,7 +391,7 @@ table.table a {
 /* Responsive tweaks */
 @media (max-width: 1024px) {
 	.layout {
-		grid-template-columns: 1fr
+		margin: 16px 24px 200px 12px;
 	}
 
 	.row {
@@ -265,7 +399,7 @@ table.table a {
 	}
 
 	.sidebar {
-		order: 2
+		display: none;
 	}
 
 	.content {

@@ -223,35 +223,9 @@
 				<li><a href="<?= site_url('pages/shipments') ?>">Shipments</a></li>
 				<li><a href="<?= site_url('pages/routes') ?>">Routes</a></li>
 				<li><a href="<?= site_url('pages/suppliers') ?>">Suppliers</a></li>
-				<li><a href="<?= site_url('settings/logistics') ?>">Settings</a></li>
 			</ul>
 			<a class="logout" href="<?= site_url('logout') ?>">Log Out</a>
 		</aside>
-
-		<main class="content">
-			<h1>Logistics Coordinator Dashboard</h1>
-			<div class="row">
-				<section class="card schedule">
-					<h2>Delivery Schedule</h2>
-					<div class="days">
-						<div class="day clickable" onclick="showSchedule('Mon')">Mon 11</div>
-						<div class="day clickable" onclick="showSchedule('Tue')">Tue 12</div>
-						<div class="day clickable" onclick="showSchedule('Wed')">Wed 13</div>
-						<div class="day clickable" onclick="showSchedule('Thu')">Thu 14</div>
-						<div class="day clickable" onclick="showSchedule('Fri')">Fri 15</div>
-						<div class="day clickable" onclick="showSchedule('Sat')">Sat 16</div>
-						<div class="day clickable" onclick="showSchedule('Sun')">Sun 17</div>
-					</div>
-				</section>
-				<section class="card metrics">
-					<h2>Route Performance Metrics</h2>
-					<ul class="metrics-list">
-						<li class="metric-item clickable" onclick="showMetric('avg-time')">Average Delivery Time</li>
-						<li class="metric-item clickable" onclick="showMetric('distance')">Optimized vs. Actual Distance</li>
-						<li class="metric-item clickable" onclick="showMetric('fuel')">Fuel Efficiency</li>
-						<li class="metric-item clickable" onclick="showMetric('on-time')">On-Time Delivery Rate</li>
-					</ul>
-				</section>
 			</div>
 
 			<section class="card table-card">

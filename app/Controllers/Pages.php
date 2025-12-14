@@ -107,6 +107,16 @@ class Pages extends BaseController
 		];
 
 		if ($inventoryModel->addItem($data)) {
+			// Log to stock_records
+			$stockRecordModel = new \App\Models\StockRecordModel();
+			$details = 'Quantity: ' . $data['quantity'] . ', Unit: ' . $data['unit'] . ', Reorder Level: ' . $data['reorder_level'];
+if ($data['expiry_date']) $details .= ', Expiry Date: ' . $data['expiry_date'];
+$stockRecordModel->insert([
+				'item_name' => $data['item_name'],
+				'action' => 'Added',
+				'details' => $details,
+				'datetime' => date('Y-m-d H:i:s'),
+			]);
 			return $this->response->setJSON(['success' => true, 'message' => 'Item added successfully']);
 		} else {
 			return $this->response->setJSON(['success' => false, 'message' => 'Failed to add item']);
@@ -120,6 +130,8 @@ class Pages extends BaseController
 		$inventoryModel = new \App\Models\InventoryModel();
 
 		$inventoryId = $request->getPost('inventory_id');
+		// Fetch old item BEFORE update
+		$old = $inventoryModel->getItem($inventoryId);
 		$data = [
 			'item_name' => $request->getPost('item_name'),
 			'item_description' => $request->getPost('item_description'),
@@ -130,6 +142,33 @@ class Pages extends BaseController
 		];
 
 		if ($inventoryModel->updateItem($inventoryId, $data)) {
+			// Log to stock_records
+			$stockRecordModel = new \App\Models\StockRecordModel();
+			$old = $inventoryModel->getItem($inventoryId);
+$changes = [];
+foreach ([
+    'quantity', 'unit', 'reorder_level', 'expiry_date', 'item_description'
+] as $field) {
+    $oldVal = isset($old[$field]) ? $old[$field] : '';
+    $newVal = isset($data[$field]) ? $data[$field] : '';
+    if ($oldVal != $newVal) {
+        $changes[] = ucfirst(str_replace('_', ' ', $field)) . ": $oldVal → $newVal";
+    }
+}
+if (count($changes) === 1 && strpos($changes[0], 'Quantity:') === 0) {
+    // Only quantity changed
+    $details = 'Quantity set to: ' . $data['quantity'];
+} else if ($changes) {
+    $details = implode(', ', $changes);
+} else {
+    $details = '';
+}
+$stockRecordModel->insert([
+				'item_name' => $data['item_name'],
+				'action' => '',
+				'details' => $details,
+				'datetime' => date('Y-m-d H:i:s'),
+			]);
 			return $this->response->setJSON(['success' => true, 'message' => 'Item updated successfully']);
 		} else {
 			return $this->response->setJSON(['success' => false, 'message' => 'Failed to update item']);
@@ -144,22 +183,72 @@ class Pages extends BaseController
 
 		$inventoryId = $request->getPost('inventory_id');
 
-		if ($inventoryModel->deleteItem($inventoryId)) {
-			return $this->response->setJSON(['success' => true, 'message' => 'Item deleted successfully']);
+		// Get item name for logging before deletion
+			$item = $inventoryModel->getItem($inventoryId);
+			if ($inventoryModel->deleteItem($inventoryId)) {
+				// Log to stock_records
+				$stockRecordModel = new \App\Models\StockRecordModel();
+				$details = '';
+if ($item) {
+	$details = 'Quantity: ' . $item['quantity'] . ', Unit: ' . $item['unit'] . ', Reorder Level: ' . $item['reorder_level'];
+	if ($item['expiry_date']) $details .= ', Expiry Date: ' . $item['expiry_date'];
+	if ($item['item_description']) $details .= ', Description: ' . $item['item_description'];
+}
+$stockRecordModel->insert([
+					'item_name' => $item ? $item['item_name'] : 'Unknown',
+					'action' => 'Deleted',
+					'details' => $details ? $details : 'Item removed from inventory',
+					'datetime' => date('Y-m-d H:i:s'),
+				]);
+				return $this->response->setJSON(['success' => true, 'message' => 'Item deleted successfully']);
 		} else {
 			return $this->response->setJSON(['success' => false, 'message' => 'Failed to delete item']);
 		}
 	}
 
-	// Get low stock alerts
+	// Get stock alerts (low stock + expired items)
 	public function getLowStockAlerts()
 	{
 		$inventoryModel = new \App\Models\InventoryModel();
 		$branchId = session()->get('branch_id') ?? 1;
 
 		$lowStockItems = $inventoryModel->getLowStockItems($branchId);
+		$expiredItems = $inventoryModel->getExpiredItems($branchId);
+		$nearExpiryItems = $inventoryModel->getNearExpiryItems($branchId);
 
-		return $this->response->setJSON($lowStockItems);
+		$alerts = [];
+
+		foreach ($lowStockItems as $item) {
+			$alerts[] = [
+				'type' => 'low',
+				'item_name' => $item['item_name'] ?? '',
+				'quantity' => $item['quantity'] ?? 0,
+				'reorder_level' => $item['reorder_level'] ?? 0,
+				'expiry_date' => $item['expiry_date'] ?? null,
+			];
+		}
+
+		foreach ($nearExpiryItems as $item) {
+			$alerts[] = [
+				'type' => 'near_expiry',
+				'item_name' => $item['item_name'] ?? '',
+				'quantity' => $item['quantity'] ?? 0,
+				'reorder_level' => $item['reorder_level'] ?? 0,
+				'expiry_date' => $item['expiry_date'] ?? null,
+			];
+		}
+
+		foreach ($expiredItems as $item) {
+			$alerts[] = [
+				'type' => 'expired',
+				'item_name' => $item['item_name'] ?? '',
+				'quantity' => $item['quantity'] ?? 0,
+				'reorder_level' => $item['reorder_level'] ?? 0,
+				'expiry_date' => $item['expiry_date'] ?? null,
+			];
+		}
+
+		return $this->response->setJSON($alerts);
 	}
 
 	public function reports()
@@ -270,6 +359,11 @@ class Pages extends BaseController
         $session->setFlashdata('success', 'Transfer request sent (simulation).');
         return redirect()->to(site_url('branch/transfers'));
     }
+
+	public function stockRecords()
+	{
+		return view('pages/stock_records');
+	}
 
 	public function logout()
 	{

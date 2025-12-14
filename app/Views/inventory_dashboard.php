@@ -146,6 +146,7 @@
 			<ul>
 				<li class="active">Dashboard</li>
 				<li><a href="<?= site_url('pages/inventory') ?>">Inventory</a></li>
+				<li><a href="<?= site_url('pages/stock_records') ?>">Stocks Records</a></li>
 				<li><a href="<?= site_url('pages/reports') ?>">Reports</a></li>
 				<li><a href="<?= site_url('inventory/settings') ?>">Settings</a></li>
 			</ul>

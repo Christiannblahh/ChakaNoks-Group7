@@ -30,7 +30,6 @@
 				<li><a href="#inventory">Inventory Management</a></li>
 				<li><a href="#orders">Order Management</a></li>
 				<li><a href="#reports">Reports</a></li>
-				<li><a href="#settings">Settings</a></li>
 			</ul>
 			<a class="logout" href="<?= site_url('logout') ?>">Log Out</a>
 		</aside>

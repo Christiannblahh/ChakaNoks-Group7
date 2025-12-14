@@ -27,7 +27,6 @@
 				<li><a href="<?= site_url('inventory_dashboard') ?>">Dashboard</a></li>
 				<li><a href="<?= site_url('pages/inventory') ?>">Inventory</a></li>
 				<li class="active">Reports</li>
-				<li><a href="<?= site_url('pages/settings') ?>">Settings</a></li>
 			</ul>
 			<button class="logout" onclick="window.location.href='<?= site_url('logout') ?>'">Log Out</button>
 		</aside>

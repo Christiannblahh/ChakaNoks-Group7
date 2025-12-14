@@ -24,7 +24,6 @@
 				<li><a href="<?= site_url('admin_dashboard') ?>">Dashboard</a></li>
 				<li><a href="<?= site_url('pages/users') ?>">Users</a></li>
 				<li class="active">Backups</li>
-				<li><a href="<?= site_url('pages/settings') ?>">Settings</a></li>
 			</ul>
 			<a class="logout" href="<?= site_url('logout') ?>">Log Out</a>
 		</aside>

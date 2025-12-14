@@ -27,7 +27,6 @@
 				<li class="active">Dashboard</li>
 				<li><a href="<?= site_url('branch/requests') ?>">Requests</a></li>
 				<li><a href="<?= site_url('branch/transfers') ?>">Transfers</a></li>
-				<li><a href="<?= site_url('branch/settings') ?>">Settings</a></li>
 			</ul>
 			<a class="logout" href="<?= site_url('logout') ?>">Log Out</a>
 		</aside>
