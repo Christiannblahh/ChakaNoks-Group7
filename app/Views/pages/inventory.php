@@ -36,9 +36,48 @@
 			<h1>Inventory Management</h1>
 
 			<!-- Stock Alerts -->
-			<section class="card" id="alerts-section" style="display: none;">
+			<section class="card" id="alerts-section" style="max-height: 320px; overflow: hidden;">
 				<h2>⚠️ Stock Alerts</h2>
-				<div id="alerts-list"></div>
+				<input id="alerts-search" type="text" placeholder="Search alerts..." style="margin-bottom:8px;width:100%;padding:6px 10px;">
+				<div id="alerts-list" style="overflow-y:auto; max-height: 220px;">
+<?php
+if (isset($alerts) && count($alerts) > 0):
+    foreach ($alerts as $alert):
+        $expiryDate = $alert['expiry_date'] ? date('m/d/Y', strtotime($alert['expiry_date'])) : 'Unknown';
+        if ($alert['type'] === 'expired') {
+            $invId = null;
+foreach ($inventory as $inv) {
+    if ($inv['item_name'] === $alert['item_name']) {
+        $invId = $inv['inventory_id'];
+        break;
+    }
+}
+echo '<div class="alert alert-danger alert-flex"><div><strong>' . esc($alert['item_name']) . '</strong> has expired (expired on ' . $expiryDate . ').</div><button class="btn btn-small discard-btn discard-red" data-inventory-id="' . $invId . '">Discard Stocks</button></div>';
+        } elseif ($alert['type'] === 'near_expiry') {
+            $invId = null;
+foreach ($inventory as $inv) {
+    if ($inv['item_name'] === $alert['item_name']) {
+        $invId = $inv['inventory_id'];
+        break;
+    }
+}
+echo '<div class="alert alert-warning alert-flex"><div><strong>' . esc($alert['item_name']) . '</strong> is near expiration (expires on ' . $expiryDate . ')</div></div>';
+        } else {
+            $invId = null;
+foreach ($inventory as $inv) {
+    if ($inv['item_name'] === $alert['item_name']) {
+        $invId = $inv['inventory_id'];
+        break;
+    }
+}
+echo '<div class="alert alert-warning alert-flex"><div><strong>' . esc($alert['item_name']) . '</strong> is low on stock (' . $alert['quantity'] . ' remaining, reorder at ' . $alert['reorder_level'] . ')</div><button class="btn btn-small add-stock-btn add-yellow" data-inventory-id="' . $invId . '">Add Stocks</button></div>';
+        }
+    endforeach;
+else:
+    echo '<div style="text-align:center;color:#888;padding:20px 0;">No stock alerts.</div>';
+endif;
+?>
+</div>
 			</section>
 
 			<!-- Add New Item -->
@@ -54,7 +93,14 @@
 					<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
 						<div style="display:flex;flex-direction:column;">
 							<label for="add-unit">Unit</label>
-							<input id="add-unit" name="unit" type="text" placeholder="Unit (e.g., kg, pcs)" class="input" required>
+							<select id="add-unit" name="unit" class="input" required>
+	<option value="" disabled selected>Select unit</option>
+	<option value="kg">kg</option>
+	<option value="pcs">pcs</option>
+	<option value="liter">liter</option>
+	<option value="liter">can</option>
+	<option value="liter">mL</option>
+</select>
 						</div>
 						<div style="display:flex;flex-direction:column;">
 							<label for="add-quantity">Quantity</label>
@@ -83,6 +129,7 @@
 					<h2>Current Stock Levels</h2>
 					<button class="btn" id="refresh-btn">Refresh</button>
 				</div>
+				<input id="inventory-search" type="text" placeholder="Search inventory..." style="margin-bottom:8px;width:100%;padding:6px 10px;">
 				<table class="table" id="inventory-table">
 					<thead>
 						<tr>
@@ -97,10 +144,50 @@
 						</tr>
 					</thead>
 					<tbody id="inventory-tbody">
-						<tr>
-							<td colspan="8" style="text-align:center;padding:40px;">Loading inventory...</td>
-						</tr>
-					</tbody>
+<?php if (isset($inventory) && count($inventory) > 0): ?>
+    <?php foreach ($inventory as $item): ?>
+        <tr>
+            <td><?= esc($item['item_name']) ?></td>
+            <td><?= esc($item['item_description']) ?></td>
+            <td><?= esc($item['unit']) ?></td>
+            <td><?= esc($item['quantity']) ?></td>
+            <td><?= esc($item['reorder_level']) ?></td>
+            <td>
+                <?php
+                    $status = 'In Stock';
+                    $statusClass = 'status-good';
+                    $expiryDate = $item['expiry_date'] ? date('m/d/Y', strtotime($item['expiry_date'])) : 'N/A';
+                    
+                    // Check expiry status first (highest priority)
+                    if ($item['expiry_date']) {
+                        $now = strtotime(date('Y-m-d'));
+                        $exp = strtotime($item['expiry_date']);
+                        $diffDays = ceil(($exp - $now) / (60 * 60 * 24));
+                        if ($diffDays <= 1) {
+                            $status = 'Expired';
+                            $statusClass = 'status-low';
+                        } elseif ($diffDays <= 30) {
+                            $status = 'Near Expiration';
+                            $statusClass = 'status-near-expiry';
+                        }
+                    }
+                    
+                    // Check low stock (takes priority over near expiration)
+                    if ($item['quantity'] <= $item['reorder_level'] && $status !== 'Expired') {
+                        $status = 'Low Stock';
+                        $statusClass = 'status-low';
+                    }
+                ?>
+                <span class="status <?= $statusClass ?>"><?= $status ?></span>
+            </td>
+            <td><?= $expiryDate ?></td>
+            <td><button class="btn btn-small edit-btn" data-inventory-id="<?= $item['inventory_id'] ?>">Edit</button></td>
+        </tr>
+    <?php endforeach; ?>
+<?php else: ?>
+    <tr><td colspan="8" style="text-align:center;padding:40px;">No inventory items found.</td></tr>
+<?php endif; ?>
+</tbody>
 				</table>
 			</section>
 		</main>
@@ -131,10 +218,48 @@
 		</div>
 
 		<script>
-			let inventoryData = [];
+		// Populate inventoryData from server-side rendered data
+		let inventoryData = <?php echo json_encode($inventory ?? []); ?>;
+		
+		// Inventory search filter
+window.addEventListener('DOMContentLoaded', function() {
+	const invSearch = document.getElementById('inventory-search');
+	if (invSearch) {
+		invSearch.addEventListener('input', function() {
+			renderInventoryTable(this.value.trim().toLowerCase());
+		});
+	}
 
-			// Custom popup function
-			function showPopup(message, type = 'info') {
+	// Edit buttons in inventory table
+	document.querySelectorAll('.edit-btn').forEach(btn => {
+		btn.addEventListener('click', function() {
+			const id = this.getAttribute('data-inventory-id');
+			if (id) editItem(id);
+		});
+	});
+
+	// Stock Alerts: Add Stocks/Discard buttons
+	document.querySelectorAll('.add-stock-btn').forEach(btn => {
+		btn.addEventListener('click', function() {
+			const id = this.getAttribute('data-inventory-id');
+			if (id) editItem(id);
+		});
+	});
+	
+	document.querySelectorAll('.discard-btn').forEach(btn => {
+		btn.addEventListener('click', function() {
+			const id = this.getAttribute('data-inventory-id');
+			if (id) {
+				if (confirm('Are you sure you want to delete this expired item?')) {
+					deleteItem(id);
+				}
+			}
+		});
+	});
+});
+
+		// Custom popup function
+		function showPopup(message, type = 'info') {
 				// Remove any existing popup
 				const existingPopup = document.querySelector('.custom-popup');
 				if (existingPopup) {
@@ -174,278 +299,138 @@
 				}
 			}
 
-			// Load inventory on page load
-			document.addEventListener('DOMContentLoaded', function() {
-				loadInventory();
-				loadAlerts();
-				setInterval(loadAlerts, 30000); // Check alerts every 30 seconds
-			});
-
-			// Refresh button
-			document.getElementById('refresh-btn').addEventListener('click', loadInventory);
-
 			// Add item form
-			document.getElementById('add-item-form').addEventListener('submit', function(e) {
-				e.preventDefault();
-				addItem(new FormData(this));
-			});
+		document.getElementById('add-item-form').addEventListener('submit', function(e) {
+			e.preventDefault();
+			addItem(new FormData(this));
+		});
 
-			// Edit modal
-			const modal = document.getElementById('edit-modal');
-			const closeBtn = document.getElementsByClassName('close')[0];
+		// Edit modal
+		const modal = document.getElementById('edit-modal');
+		const closeBtn = document.getElementsByClassName('close')[0];
 
 			closeBtn.onclick = function() {
-				modal.style.display = 'none';
-			}
+		modal.style.display = 'none';
+	}
 
-			window.onclick = function(event) {
-				if (event.target == modal) {
-					modal.style.display = 'none';
+	window.onclick = function(event) {
+		if (event.target == modal) {
+			modal.style.display = 'none';
+		}
+	}
+
+	// Edit form
+	document.getElementById('edit-item-form').addEventListener('submit', function(e) {
+		e.preventDefault();
+		updateItem(new FormData(this));
+	});
+
+	// Delete button
+	document.getElementById('delete-btn').addEventListener('click', function() {
+		if (confirm('Are you sure you want to delete this item?')) {
+			deleteItem(document.getElementById('edit-inventory-id').value);
+		}
+	});
+
+		// Search functionality for server-side rendered table
+		function renderInventoryTable(filterQuery = '') {
+			const tbody = document.getElementById('inventory-tbody');
+			const rows = tbody.getElementsByTagName('tr');
+			
+			for (let row of rows) {
+				if (filterQuery === '') {
+					row.style.display = '';
+				} else {
+					const text = row.textContent.toLowerCase();
+					row.style.display = text.includes(filterQuery) ? '' : 'none';
 				}
 			}
-
-			// Edit form
-			document.getElementById('edit-item-form').addEventListener('submit', function(e) {
-				e.preventDefault();
-				updateItem(new FormData(this));
-			});
-
-			// Delete button
-			document.getElementById('delete-btn').addEventListener('click', function() {
-				if (confirm('Are you sure you want to delete this item?')) {
-					deleteItem(document.getElementById('edit-inventory-id').value);
-				}
-			});
-
-			function loadInventory() {
-				fetch('<?= site_url('inventory/get') ?>')
-					.then(response => response.json())
-					.then(data => {
-						inventoryData = data;
-						renderInventoryTable();
-					})
-					.catch(error => console.error('Error loading inventory:', error));
-			}
-
-			function loadAlerts() {
-				fetch('<?= site_url('inventory/low-stock') ?>')
-					.then(response => response.json())
-					.then(data => {
-						renderAlerts(data);
-					})
-					.catch(error => console.error('Error loading alerts:', error));
-			}
-
-			function renderInventoryTable() {
-				const tbody = document.getElementById('inventory-tbody');
-				if (inventoryData.length === 0) {
-					tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;">No inventory items found.</td></tr>';
-					return;
-				}
-
-				tbody.innerHTML = inventoryData.map(item => {
-					let status = 'In Stock';
-					let statusClass = 'status-good';
-					const expiryDate = item.expiry_date ? new Date(item.expiry_date).toLocaleDateString() : 'N/A';
-					if (item.expiry_date) {
-						const now = new Date();
-						const exp = new Date(item.expiry_date);
-						const diffDays = Math.ceil((exp - now) / (1000 * 60 * 60 * 24));
-						if (diffDays < 0) {
-							status = 'Expired';
-							statusClass = 'status-low';
-						} else if (diffDays <= 30) {
-							status = 'Near Expiration';
-							statusClass = 'status-near-expiry';
-						}
-					}
-					// Expired should always take priority
-					if (item.expiry_date) {
-						const now = new Date();
-						const exp = new Date(item.expiry_date);
-						if (exp < now) {
-							status = 'Expired';
-							statusClass = 'status-low';
-						}
-					}
-					if (item.quantity <= item.reorder_level && status === 'In Stock') {
-						status = 'Low Stock';
-						statusClass = 'status-low';
-					}
-					return `
-						<tr>
-							<td>${item.item_name}</td>
-							<td>${item.item_description || ''}</td>
-							<td>${item.unit}</td>
-							<td>${item.quantity}</td>
-							<td>${item.reorder_level}</td>
-							<td><span class="status ${statusClass}">${status}</span></td>
-							<td>${expiryDate}</td>
-							<td><button class="btn btn-small" onclick="editItem(${item.inventory_id})">Edit</button></td>
-						</tr>
-					`;
-				}).join('');
-			}
-
-			function renderAlerts(alerts) {
-				const alertsSection = document.getElementById('alerts-section');
-				const alertsList = document.getElementById('alerts-list');
-
-				if (!alerts || alerts.length === 0) {
-					alertsSection.style.display = 'none';
-					alertsList.innerHTML = '';
-					return;
-				}
-
-				alertsSection.style.display = 'block';
-				alertsList.innerHTML = alerts.map((item, idx) => {
-					const expiryDate = item.expiry_date ? new Date(item.expiry_date).toLocaleDateString() : 'Unknown';
-					if (item.type === 'expired') {
-						return `
-							<div class="alert alert-danger alert-flex">
-								<div><strong>${item.item_name}</strong> has expired (expired on ${expiryDate}).</div>
-								<button class="btn btn-small discard-btn discard-red" data-index="${idx}">Discard Stocks</button>
-							</div>
-						`;
-					}
-					if (item.type === 'near_expiry') {
-						return `
-							<div class="alert alert-warning alert-flex">
-								<div><strong>${item.item_name}</strong> is near expiration (expires on ${expiryDate})</div>
-								<button class="btn btn-small add-stock-btn add-yellow" data-index="${idx}">Add Stocks</button>
-							</div>
-						`;
-					}
-					return `
-						<div class="alert alert-warning alert-flex">
-							<div><strong>${item.item_name}</strong> is low on stock (${item.quantity} remaining, reorder at ${item.reorder_level})</div>
-							<button class="btn btn-small add-stock-btn add-yellow" data-index="${idx}">Add Stocks</button>
-						</div>
-					`;
-				}).join('');
-
-				// Attach event listeners for the buttons
-				setTimeout(() => {
-					document.querySelectorAll('.add-stock-btn').forEach(btn => {
-						btn.onclick = function() {
-							const idx = parseInt(this.getAttribute('data-index'));
-							const alert = alerts[idx];
-							if (!alert) return;
-							// Open edit modal for the item
-							const item = inventoryData.find(i => i.item_name === alert.item_name);
-							if (item) editItem(item.inventory_id);
-						};
-					});
-					document.querySelectorAll('.discard-btn').forEach(btn => {
-						btn.onclick = function() {
-							const idx = parseInt(this.getAttribute('data-index'));
-							const alert = alerts[idx];
-							if (!alert) return;
-							// Find item by name and set quantity to 0
-							const item = inventoryData.find(i => i.item_name === alert.item_name);
-							if (item) {
-								if (confirm(`Are you sure you want to discard all stocks for ${item.item_name}? This will set the quantity to 0.`)) {
-									// Set quantity to 0 via updateItem
-									const formData = new FormData();
-									formData.append('inventory_id', item.inventory_id);
-									formData.append('item_name', item.item_name);
-									formData.append('item_description', item.item_description || '');
-									formData.append('unit', item.unit);
-									formData.append('quantity', 0);
-									formData.append('reorder_level', item.reorder_level);
-									formData.append('expiry_date', '');
-									updateItem(formData);
-								}
-							}
-						};
-					});
-				}, 50);
-			}
+		}
 
 			function addItem(formData) {
-				fetch('<?= site_url('inventory/add') ?>', {
-					method: 'POST',
-					body: formData
-				})
-				.then(response => response.json())
-				.then(data => {
-					if (data.success) {
-						showPopup(data.message, 'success');
-						document.getElementById('add-item-form').reset();
-						loadInventory();
-						loadAlerts();
-					} else {
-						showPopup(data.message, 'error');
-					}
-				})
-				.catch(error => {
-					console.error('Error adding item:', error);
-					showPopup('Error adding item. Please try again.', 'error');
-				});
+		fetch('<?= site_url('inventory/add') ?>', {
+			method: 'POST',
+			body: formData
+		})
+		.then(response => response.json())
+		.then(data => {
+			if (data.success) {
+				showPopup(data.message, 'success');
+				document.getElementById('add-item-form').reset();
+				// Reload page to refresh server-side rendered content
+				window.location.reload();
+			} else {
+				showPopup(data.message, 'error');
 			}
+		})
+		.catch(error => {
+			console.error('Error adding item:', error);
+			showPopup('Error adding item. Please try again.', 'error');
+		});
+	}
 
-			function editItem(inventoryId) {
-				const item = inventoryData.find(i => i.inventory_id == inventoryId);
-				if (!item) return;
+	function editItem(inventoryId) {
+		const item = inventoryData.find(i => i.inventory_id == inventoryId);
+		if (!item) return;
 
-				document.getElementById('edit-inventory-id').value = item.inventory_id;
-				document.getElementById('edit-item-name').value = item.item_name;
-				document.getElementById('edit-item-description').value = item.item_description || '';
-				document.getElementById('edit-unit').value = item.unit;
-				document.getElementById('edit-quantity').value = item.quantity;
-				document.getElementById('edit-reorder-level').value = item.reorder_level;
-				document.getElementById('edit-expiry-date').value = item.expiry_date ? item.expiry_date.split(' ')[0] : '';
+		document.getElementById('edit-inventory-id').value = item.inventory_id;
+		document.getElementById('edit-item-name').value = item.item_name;
+		document.getElementById('edit-item-description').value = item.item_description || '';
+		document.getElementById('edit-unit').value = item.unit;
+		document.getElementById('edit-quantity').value = item.quantity;
+		document.getElementById('edit-reorder-level').value = item.reorder_level;
+		document.getElementById('edit-expiry-date').value = item.expiry_date ? item.expiry_date.split(' ')[0] : '';
 
-				modal.style.display = 'block';
+		modal.style.display = 'block';
+	}
+
+	function updateItem(formData) {
+		fetch('<?= site_url('inventory/update') ?>', {
+			method: 'POST',
+			body: formData
+		})
+		.then(response => response.json())
+		.then(data => {
+			if (data.success) {
+				showPopup(data.message, 'success');
+				modal.style.display = 'none';
+				// Reload page to refresh server-side rendered content
+				window.location.reload();
+			} else {
+				showPopup(data.message, 'error');
 			}
+		})
+		.catch(error => {
+			console.error('Error updating item:', error);
+			showPopup('Error updating item. Please try again.', 'error');
+		});
+	}
 
-			function updateItem(formData) {
-				fetch('<?= site_url('inventory/update') ?>', {
-					method: 'POST',
-					body: formData
-				})
-				.then(response => response.json())
-				.then(data => {
-					if (data.success) {
-						showPopup(data.message, 'success');
-						modal.style.display = 'none';
-						loadInventory();
-						loadAlerts();
-					} else {
-						showPopup(data.message, 'error');
-					}
-				})
-				.catch(error => {
-					console.error('Error updating item:', error);
-					showPopup('Error updating item. Please try again.', 'error');
-				});
+	function deleteItem(inventoryId) {
+		const formData = new FormData();
+		formData.append('inventory_id', inventoryId);
+
+		fetch('<?= site_url('inventory/delete') ?>', {
+			method: 'POST',
+			body: formData
+		})
+		.then(response => response.json())
+		.then(data => {
+			if (data.success) {
+				showPopup(data.message, 'success');
+				modal.style.display = 'none';
+				// Reload page to refresh server-side rendered content
+				window.location.reload();
+			} else {
+				showPopup(data.message, 'error');
 			}
-
-			function deleteItem(inventoryId) {
-				const formData = new FormData();
-				formData.append('inventory_id', inventoryId);
-
-				fetch('<?= site_url('inventory/delete') ?>', {
-					method: 'POST',
-					body: formData
-				})
-				.then(response => response.json())
-				.then(data => {
-					if (data.success) {
-						showPopup(data.message, 'success');
-						modal.style.display = 'none';
-						loadInventory();
-						loadAlerts();
-					} else {
-						showPopup(data.message, 'error');
-					}
-				})
-				.catch(error => {
-					console.error('Error deleting item:', error);
-					showPopup('Error deleting item. Please try again.', 'error');
-				});
-			}
-		</script>
+		})
+		.catch(error => {
+			console.error('Error deleting item:', error);
+			showPopup('Error deleting item. Please try again.', 'error');
+		});
+	}
+</script>
 
 		<style>
 			.status {

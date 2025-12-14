@@ -37,14 +37,14 @@ class InventoryModel extends Model
                     ->findAll();
     }
 
-    // Get items that have reached or passed their expiry date
+    // Get items that are expired (expiry date is today or has passed)
     public function getExpiredItems($branchId)
     {
-        $currentDate = date('Y-m-d');
+        $tomorrow = date('Y-m-d', strtotime('+1 day'));
 
         return $this->where('branch_id', $branchId)
                     ->where('expiry_date IS NOT NULL', null, false)
-                    ->where('DATE(expiry_date) <=', $currentDate)
+                    ->where('DATE(expiry_date) <=', $tomorrow)
                     ->findAll();
     }
 

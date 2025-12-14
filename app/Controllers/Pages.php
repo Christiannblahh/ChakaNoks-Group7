@@ -51,7 +51,42 @@ class Pages extends BaseController
 
 	public function inventory()
 	{
-		return view('pages/inventory');
+		$inventoryModel = new \App\Models\InventoryModel();
+		$branchId = session()->get('branch_id') ?? 1;
+		$inventory = $inventoryModel->getInventoryByBranch($branchId);
+		// Gather alerts
+		$lowStockItems = $inventoryModel->getLowStockItems($branchId);
+		$expiredItems = $inventoryModel->getExpiredItems($branchId);
+		$nearExpiryItems = $inventoryModel->getNearExpiryItems($branchId);
+		$alerts = [];
+		foreach ($lowStockItems as $item) {
+			$alerts[] = [
+				'type' => 'low',
+				'item_name' => $item['item_name'] ?? '',
+				'quantity' => $item['quantity'] ?? 0,
+				'reorder_level' => $item['reorder_level'] ?? 0,
+				'expiry_date' => $item['expiry_date'] ?? null,
+			];
+		}
+		foreach ($nearExpiryItems as $item) {
+			$alerts[] = [
+				'type' => 'near_expiry',
+				'item_name' => $item['item_name'] ?? '',
+				'quantity' => $item['quantity'] ?? 0,
+				'reorder_level' => $item['reorder_level'] ?? 0,
+				'expiry_date' => $item['expiry_date'] ?? null,
+			];
+		}
+		foreach ($expiredItems as $item) {
+			$alerts[] = [
+				'type' => 'expired',
+				'item_name' => $item['item_name'] ?? '',
+				'quantity' => $item['quantity'] ?? 0,
+				'reorder_level' => $item['reorder_level'] ?? 0,
+				'expiry_date' => $item['expiry_date'] ?? null,
+			];
+		}
+		return view('pages/inventory', ['inventory' => $inventory, 'alerts' => $alerts]);
 	}
 
 	// Purchase approvals view
@@ -155,20 +190,31 @@ foreach ([
         $changes[] = ucfirst(str_replace('_', ' ', $field)) . ": $oldVal → $newVal";
     }
 }
+$action = 'Updated';
 if (count($changes) === 1 && strpos($changes[0], 'Quantity:') === 0) {
     // Only quantity changed
-    $details = 'Quantity set to: ' . $data['quantity'];
+    $oldQty = isset($old['quantity']) ? $old['quantity'] : 0;
+    $newQty = $data['quantity'];
+    if ($newQty > $oldQty) {
+        $action = 'Add Stocks';
+        $details = 'Added ' . ($newQty - $oldQty) . ' units (Total: ' . $newQty . ')';
+    } elseif ($newQty < $oldQty) {
+        $action = 'Discard Stocks';
+        $details = 'Removed ' . ($oldQty - $newQty) . ' units (Total: ' . $newQty . ')';
+    } else {
+        $details = 'Quantity set to: ' . $newQty;
+    }
 } else if ($changes) {
     $details = implode(', ', $changes);
 } else {
-    $details = '';
+    $details = 'Updated Successfully';
 }
 $stockRecordModel->insert([
-				'item_name' => $data['item_name'],
-				'action' => '',
-				'details' => $details,
-				'datetime' => date('Y-m-d H:i:s'),
-			]);
+			'item_name' => $data['item_name'],
+			'action' => $action,
+			'details' => $details,
+			'datetime' => date('Y-m-d H:i:s'),
+		]);
 			return $this->response->setJSON(['success' => true, 'message' => 'Item updated successfully']);
 		} else {
 			return $this->response->setJSON(['success' => false, 'message' => 'Failed to update item']);
