@@ -20,6 +20,16 @@ $routes->get('branch_dashboard', 'Dashboard::branch');
 // Franchise/Central Office Admin Dashboard
 $routes->get('franchise_dashboard', 'Dashboard::franchise');
 
+// Franchise application management
+$routes->get('franchise/applications', 'Franchise::applications');
+$routes->get('franchise/applications/approve/(:num)', 'Franchise::approve/$1');
+$routes->get('franchise/applications/deny/(:num)', 'Franchise::deny/$1');
+$routes->get('franchise/applications/(:num)/supplies', 'Franchise::supplies/$1');
+$routes->post('franchise/applications/(:num)/supplies/add', 'Franchise::addSupply/$1');
+
+// Franchise branches listing
+$routes->get('franchise/franchises', 'Franchise::franchises');
+
 // Navigation pages
 $routes->get('pages/users', 'Pages::users');
 $routes->get('pages/users/edit/(:num)', 'Pages::editUser/$1');

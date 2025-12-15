@@ -12,7 +12,7 @@ class Pages extends BaseController
 	public function users()
     {
         $userModel = new \App\Models\UserModel();
-        $users = $userModel->withDeleted()->findAll();
+        $users = $userModel->findAll();
         return view('pages/users', ['users' => $users]);
     }
 
