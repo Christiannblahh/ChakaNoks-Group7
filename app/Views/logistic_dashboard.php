@@ -23,6 +23,73 @@
 			alert('Showing details for: ' + metricNames[metric]);
 		}
 
+		// Load shipments on page load
+		document.addEventListener('DOMContentLoaded', () => {
+			loadShipments();
+		});
+
+		async function loadShipments() {
+			try {
+				const response = await fetch('<?= site_url('delivery') ?>');
+				const shipments = await response.json();
+				const tbody = document.getElementById('shipmentsTableBody');
+				tbody.innerHTML = '';
+
+				if (!shipments || shipments.length === 0) {
+					tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #6b7280; padding: 20px;">No shipments found. <a href="javascript:void(0);" onclick="openAddShipmentModal()" style="color: #111; font-weight: 600;">Create one now</a></td></tr>';
+					return;
+				}
+
+				for (const shipment of shipments) {
+					const statusColor = shipment.status === 'Scheduled' ? '#3730a3' : (shipment.status === 'In Transit' ? '#92400e' : '#065f46');
+					const statusBg = shipment.status === 'Scheduled' ? '#e0e7ff' : (shipment.status === 'In Transit' ? '#fef3c7' : '#d1fae5');
+					
+					const row = document.createElement('tr');
+					row.innerHTML = `
+						<td><strong>#${shipment.delivery_id}</strong></td>
+						<td>#${shipment.order_id}</td>
+						<td><span style="background: ${statusBg}; color: ${statusColor}; padding: 4px 8px; border-radius: 4px; font-weight: 600; font-size: 12px;">${shipment.status}</span></td>
+						<td>${new Date(shipment.scheduled_date).toLocaleString()}</td>
+						<td>${shipment.delivered_at ? new Date(shipment.delivered_at).toLocaleString() : '<span style="color: #9ca3af;">Pending</span>'}</td>
+						<td>
+							${shipment.status === 'Scheduled' ? `<button class="btn" style="padding: 4px 8px; font-size: 12px; background: #111; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="updateStatus(${shipment.delivery_id}, 'In Transit')">Transit</button>` : ''}
+							${shipment.status === 'In Transit' ? `<button class="btn" style="padding: 4px 8px; font-size: 12px; background: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="updateStatus(${shipment.delivery_id}, 'Delivered')">Deliver</button>` : ''}
+							<a href="javascript:void(0);" onclick="viewDetails(${shipment.delivery_id})" style="color: #111; text-decoration: none; margin-left: 8px; font-weight: 600;">Details</a>
+						</td>
+					`;
+					tbody.appendChild(row);
+				}
+			} catch (error) {
+				console.error('Error loading shipments:', error);
+				document.getElementById('shipmentsTableBody').innerHTML = '<tr><td colspan="6" style="text-align: center; color: red; padding: 20px;">Error loading shipments. Please refresh the page.</td></tr>';
+			}
+		}
+
+		async function updateStatus(deliveryId, newStatus) {
+			try {
+				const response = await fetch(`<?= site_url('delivery') ?>/${deliveryId}/status`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+					body: `status=${newStatus}`
+				});
+
+				const data = await response.json();
+				if (data.success) {
+					alert(`Status updated to ${newStatus}`);
+					loadShipments();
+				} else {
+					alert('Error: ' + (data.message || 'Failed to update status'));
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				alert('An error occurred while updating status');
+			}
+		}
+
+		function viewDetails(deliveryId) {
+			alert(`Shipment #${deliveryId} details - Detailed view to be implemented`);
+		}
+
 		function openAddShipmentModal() {
 			document.getElementById('addShipmentModal').style.display = 'flex';
 		}
@@ -77,10 +144,11 @@
 				const data = await response.json();
 
 				if (response.ok) {
-					formMessage.innerHTML = '<span style="color: #10b981;">✓ Shipment created successfully! Refreshing...</span>';
+					formMessage.innerHTML = '<span style="color: #10b981;">✓ Shipment created successfully!</span>';
 					setTimeout(() => {
-						location.reload();
-					}, 1500);
+						closeAddShipmentModal();
+						loadShipments();
+					}, 1000);
 				} else {
 					formMessage.innerHTML = '<span style="color: #ef4444;">✗ Error: ' + (data.messages || data.message || 'Failed to create shipment') + '</span>';
 				}
@@ -183,40 +251,16 @@
 					<thead>
 						<tr>
 							<th>Shipment ID</th>
-							<th>Route</th>
+							<th>Order ID</th>
 							<th>Status</th>
-							<th>Date</th>
+							<th>Scheduled Date</th>
+							<th>Delivered Date</th>
 							<th>Actions</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="shipmentsTableBody">
 						<tr>
-							<td>SHP-001</td>
-							<td>NYC-BOS-PHI</td>
-							<td>In Transit</td>
-							<td>2024-07-22 17:00</td>
-							<td><a href="#">View Details</a> &nbsp; <a href="#">Update Status</a></td>
-						</tr>
-						<tr>
-							<td>SHP-002</td>
-							<td>NYC-BOS-PHI</td>
-							<td>Delivered</td>
-							<td>2024-07-22 17:00</td>
-							<td><a href="#">View Details</a> &nbsp; <a href="#">Update Status</a></td>
-						</tr>
-						<tr>
-							<td>SHP-003</td>
-							<td>NYC-BOS-PHI</td>
-							<td>Pending</td>
-							<td>2024-07-22 17:00</td>
-							<td><a href="#">View Details</a> &nbsp; <a href="#">Update Status</a></td>
-						</tr>
-						<tr>
-							<td>SHP-004</td>
-							<td>NYC-BOS-PHI</td>
-							<td>In Transit</td>
-							<td>2024-07-22 17:00</td>
-							<td><a href="#">View Details</a> &nbsp; <a href="#">Update Status</a></td>
+							<td colspan="6" style="text-align: center; color: #6b7280; padding: 20px;">Loading shipments...</td>
 						</tr>
 					</tbody>
 				</table>
