@@ -23,7 +23,7 @@ class CreateDeliveriesTable extends Migration
                 'unsigned' => true,
             ],
             'scheduled_date' => [
-                'type' => 'DATE',
+                'type' => 'DATETIME',
             ],
             'delivered_at' => [
                 'type' => 'DATETIME',

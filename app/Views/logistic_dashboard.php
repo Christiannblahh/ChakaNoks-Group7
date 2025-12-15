@@ -22,6 +22,72 @@
 			};
 			alert('Showing details for: ' + metricNames[metric]);
 		}
+
+		function openAddShipmentModal() {
+			document.getElementById('addShipmentModal').style.display = 'flex';
+		}
+
+		function closeAddShipmentModal() {
+			document.getElementById('addShipmentModal').style.display = 'none';
+			document.getElementById('addShipmentForm').reset();
+			document.getElementById('formMessage').innerHTML = '';
+			document.getElementById('orderError').innerHTML = '';
+			document.getElementById('dateError').innerHTML = '';
+		}
+
+		document.getElementById('addShipmentForm').addEventListener('submit', async function(e) {
+			e.preventDefault();
+			
+			// Clear previous errors
+			document.getElementById('orderError').innerHTML = '';
+			document.getElementById('dateError').innerHTML = '';
+			document.getElementById('formMessage').innerHTML = '';
+
+			const orderId = document.getElementById('orderId').value.trim();
+			const scheduledDate = document.getElementById('scheduledDate').value;
+			const status = document.getElementById('status').value;
+
+			// Validation
+			if (!orderId || orderId <= 0) {
+				document.getElementById('orderError').innerHTML = 'Please enter a valid purchase order ID';
+				return;
+			}
+
+			if (!scheduledDate) {
+				document.getElementById('dateError').innerHTML = 'Please select a scheduled delivery date';
+				return;
+			}
+
+			const formMessage = document.getElementById('formMessage');
+			formMessage.innerHTML = '<span style="color: #f59e0b;">Creating shipment...</span>';
+
+			try {
+				const response = await fetch('<?= site_url('delivery/create') ?>', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+					body: new URLSearchParams({
+						order_id: orderId,
+						scheduled_date: scheduledDate.replace('T', ' ') + ':00',
+						status: status
+					})
+				});
+
+				const data = await response.json();
+
+				if (response.ok) {
+					formMessage.innerHTML = '<span style="color: #10b981;">✓ Shipment created successfully! Refreshing...</span>';
+					setTimeout(() => {
+						location.reload();
+					}, 1500);
+				} else {
+					formMessage.innerHTML = '<span style="color: #ef4444;">✗ Error: ' + (data.messages || data.message || 'Failed to create shipment') + '</span>';
+				}
+			} catch (error) {
+				formMessage.innerHTML = '<span style="color: #ef4444;">✗ Error: ' + error.message + '</span>';
+			}
+		});
 	</script>
 </head>
 <body>
@@ -35,6 +101,40 @@
 			<a href="<?= site_url('pages/messages') ?>">Messages</a>
 		</nav>
 	</header>
+
+	<!-- Add Shipment Modal -->
+	<div id="addShipmentModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+		<div class="modal-content" style="background: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+			<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+				<h2 style="margin: 0;">Add New Shipment</h2>
+				<button onclick="closeAddShipmentModal()" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+			</div>
+			<form id="addShipmentForm">
+				<div style="margin-bottom: 15px;">
+					<label style="display: block; margin-bottom: 5px; font-weight: 600;">Purchase Order ID *</label>
+					<input type="number" id="orderId" name="order_id" placeholder="Enter purchase order ID" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+					<small id="orderError" style="color: red;"></small>
+				</div>
+				<div style="margin-bottom: 15px;">
+					<label style="display: block; margin-bottom: 5px; font-weight: 600;">Scheduled Delivery Date *</label>
+					<input type="datetime-local" id="scheduledDate" name="scheduled_date" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+					<small id="dateError" style="color: red;"></small>
+				</div>
+				<div style="margin-bottom: 20px;">
+					<label style="display: block; margin-bottom: 5px; font-weight: 600;">Initial Status</label>
+					<select id="status" name="status" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+						<option value="Scheduled">Scheduled</option>
+						<option value="In Transit">In Transit</option>
+					</select>
+				</div>
+				<div style="display: flex; gap: 10px;">
+					<button type="submit" style="flex: 1; padding: 10px; background: #111; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Create Shipment</button>
+					<button type="button" onclick="closeAddShipmentModal()" style="flex: 1; padding: 10px; background: #e5e7eb; color: #111; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Cancel</button>
+				</div>
+				<div id="formMessage" style="margin-top: 10px; text-align: center;"></div>
+			</form>
+		</div>
+	</div>
 
 	<div class="layout">
 		<aside class="sidebar">
@@ -77,7 +177,7 @@
 			<section class="card table-card">
 				<div class="table-head">
 					<h2>Shipment Status Updates</h2>
-					<a class="add-link" href="#">Add New Shipment</a>
+					<a class="add-link" href="javascript:void(0);" onclick="openAddShipmentModal()">Add New Shipment</a>
 				</div>
 				<table class="table">
 					<thead>

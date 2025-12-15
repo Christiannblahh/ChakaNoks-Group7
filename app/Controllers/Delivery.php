@@ -237,6 +237,80 @@ class Delivery extends ResourceController {
     }
 
     /**
+     * Create a new shipment/delivery
+     * POST /delivery/create
+     */
+    public function create()
+    {
+        $request = service('request');
+        $session = session();
+
+        // Get input
+        $orderId = $request->getPost('order_id');
+        $scheduledDate = $request->getPost('scheduled_date');
+        $status = $request->getPost('status') ?? 'Scheduled';
+
+        // Validation
+        if (!$orderId) {
+            return $this->fail('Purchase Order ID is required', 400);
+        }
+
+        if (!is_numeric($orderId)) {
+            return $this->fail('Purchase Order ID must be a valid number', 400);
+        }
+
+        if (!$scheduledDate) {
+            return $this->fail('Scheduled delivery date is required', 400);
+        }
+
+        // Validate status
+        if (!in_array($status, ['Scheduled', 'In Transit'])) {
+            return $this->fail('Status must be either "Scheduled" or "In Transit"', 400);
+        }
+
+        // Verify purchase order exists
+        $orderModel = new PurchaseOrderModel();
+        $order = $orderModel->find($orderId);
+        if (!$order) {
+            return $this->fail('Purchase Order #' . $orderId . ' not found', 404);
+        }
+
+        // Check if delivery already exists for this order
+        $model = new DeliveryModel();
+        $existing = $model->where('order_id', $orderId)->first();
+        if ($existing) {
+            return $this->fail('Delivery already exists for this purchase order', 400);
+        }
+
+        try {
+            // Validate date format
+            $dateObj = \DateTime::createFromFormat('Y-m-d H:i:s', $scheduledDate);
+            if (!$dateObj || $dateObj->format('Y-m-d H:i:s') !== $scheduledDate) {
+                return $this->fail('Invalid date format. Expected: YYYY-MM-DD HH:MM:SS', 400);
+            }
+
+            // Create delivery
+            $deliveryId = $model->insert([
+                'order_id' => $orderId,
+                'logistics_id' => $session->get('user_id'),
+                'scheduled_date' => $scheduledDate,
+                'status' => $status
+            ]);
+
+            // Log audit
+            $this->logAudit('DELIVERY_CREATED', "New shipment created for order #$orderId scheduled for $scheduledDate", $session->get('user_id'));
+
+            return $this->respondCreated([
+                'success' => true,
+                'delivery_id' => $deliveryId,
+                'message' => 'Shipment created successfully'
+            ]);
+        } catch (\Exception $e) {
+            return $this->fail('Failed to create shipment: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
      * Log audit trail
      */
     private function logAudit($action, $description, $userId)

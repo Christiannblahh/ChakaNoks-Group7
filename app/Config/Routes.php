@@ -92,6 +92,7 @@ $routes->get('purchasing/suppliers/(:num)', 'Purchasing::getSupplier/$1');
 $routes->get('purchasing/stats', 'Purchasing::getStats');
 
 // ===== DELIVERY ROUTES =====
+$routes->post('delivery/create', 'Delivery::create');
 $routes->get('delivery', 'Delivery::index');
 $routes->get('delivery/(:num)', 'Delivery::show/$1');
 $routes->post('delivery/mark-delivered/(:num)', 'Delivery::markDelivered/$1');
