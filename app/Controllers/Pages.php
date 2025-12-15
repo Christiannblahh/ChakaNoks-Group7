@@ -54,6 +54,31 @@ class Pages extends BaseController
 		return view('pages/inventory');
 	}
 
+	// Purchase approvals view
+	public function purchaseApprovals()
+	{
+		$session = session();
+		
+		// Check if user is logged in
+		if (!$session->get('logged_in')) {
+			return redirect()->to(site_url('login'));
+		}
+		
+		// Allow Central Admin, System Admin, and Inventory Staff to view approvals
+		$allowedRoles = ['Central Admin', 'System Admin', 'Inventory Staff'];
+		if (!in_array($session->get('role'), $allowedRoles)) {
+			return redirect()->to(site_url('login'))->with('error', 'You do not have permission to access this page.');
+		}
+		
+		return view('pages/purchase_approvals');
+	}
+
+	// Purchase orders view
+	public function purchaseOrders()
+	{
+		return view('pages/purchase_orders');
+	}
+
 	// Get inventory data for AJAX
 	public function getInventory()
 	{
@@ -253,6 +278,3 @@ class Pages extends BaseController
 		return redirect()->to(site_url('login'));
 	}
 }
-
-
-
