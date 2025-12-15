@@ -42,7 +42,22 @@
 				<table class="table">
 					<thead><tr><th>ID</th><th>From</th><th>To</th><th>Item</th><th>Qty</th><th>Date</th></tr></thead>
 					<tbody>
-						<tr><td>TR-2024-010</td><td>Branch1</td><td>Branch3</td><td>Chicken</td><td>10</td><td>2024-07-30</td></tr>
+						<?php if (!empty($transfers)): ?>
+							<?php foreach ($transfers as $transfer): ?>
+								<tr>
+									<td>TR-<?= $transfer['transfer_id'] ?></td>
+									<td><?= esc($transfer['from_branch_name'] ?? 'Unknown') ?></td>
+									<td><?= esc($transfer['to_branch_name'] ?? 'Unknown') ?></td>
+									<td><?= esc($transfer['item_name'] ?? '') ?></td>
+									<td><?= esc($transfer['quantity'] ?? 0) ?></td>
+									<td><?= date('Y-m-d', strtotime($transfer['transfer_date'])) ?></td>
+								</tr>
+							<?php endforeach; ?>
+						<?php else: ?>
+							<tr>
+								<td colspan="6" style="text-align: center;">No transfers found.</td>
+							</tr>
+						<?php endif; ?>
 					</tbody>
 				</table>
 			</section>
@@ -50,6 +65,3 @@
 	</div>
 </body>
 </html>
-
-
-

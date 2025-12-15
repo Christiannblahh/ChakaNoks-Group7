@@ -121,19 +121,21 @@
 		async function submitRequest() {
 			const items = [];
 			const itemElements = document.querySelectorAll('[id^="item-"]');
-			
+
 			itemElements.forEach(el => {
 				const name = el.querySelector('.item-name').value;
 				const qty = el.querySelector('.item-qty').value;
 				const unit = el.querySelector('.item-unit').value;
 				const cost = el.querySelector('.item-cost').value;
-				
+
 				if (name && qty && cost) {
 					items.push({
 						item_name: name,
+						description: '', // Add description field
 						quantity: parseInt(qty),
 						unit: unit || 'pcs',
-						estimated_cost: parseFloat(cost)
+						estimated_cost: parseFloat(cost),
+						notes: '' // Add notes field for items
 					});
 				}
 			});
@@ -144,13 +146,21 @@
 			}
 
 			try {
+				// Get CSRF token from meta tag or cookie
+				const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ||
+				                 '<?= csrf_hash() ?>';
+
 				const formData = new FormData();
 				formData.append('items', JSON.stringify(items));
 				formData.append('notes', document.getElementById('notes').value);
+				formData.append('<?= csrf_token() ?>', csrfToken);
 
 				const response = await fetch('<?= site_url("purchasing/requests/create") ?>', {
 					method: 'POST',
-					body: formData
+					body: formData,
+					headers: {
+						'X-Requested-With': 'XMLHttpRequest'
+					}
 				});
 
 				const result = await response.json();

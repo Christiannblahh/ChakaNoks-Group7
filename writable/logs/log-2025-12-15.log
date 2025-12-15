@@ -6830,3 +6830,245 @@ AND `status` != :status:', [...], false)
  9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
 10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
 11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-12-15 18:17:44 --> mysqli_sql_exception: Unknown column 'notes' in 'field list' in C:\xampp\htdocs\ChakaNoks\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ChakaNoks\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `pu...', 0)
+#1 C:\xampp\htdocs\ChakaNoks\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `pu...')
+#2 C:\xampp\htdocs\ChakaNoks\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `pu...')
+#3 C:\xampp\htdocs\ChakaNoks\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `pu...', Array, false)
+#4 C:\xampp\htdocs\ChakaNoks\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ChakaNoks\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ChakaNoks\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ChakaNoks\app\Controllers\Purchasing.php(56): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ChakaNoks\system\CodeIgniter.php(933): App\Controllers\Purchasing->createRequest()
+#9 C:\xampp\htdocs\ChakaNoks\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Purchasing))
+#10 C:\xampp\htdocs\ChakaNoks\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\ChakaNoks\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\ChakaNoks\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\ChakaNoks\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+ERROR - 2025-12-15 18:18:19 --> mysqli_sql_exception: Unknown column 'notes' in 'field list' in C:\xampp\htdocs\ChakaNoks\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ChakaNoks\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `pu...', 0)
+#1 C:\xampp\htdocs\ChakaNoks\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `pu...')
+#2 C:\xampp\htdocs\ChakaNoks\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `pu...')
+#3 C:\xampp\htdocs\ChakaNoks\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `pu...', Array, false)
+#4 C:\xampp\htdocs\ChakaNoks\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ChakaNoks\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ChakaNoks\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ChakaNoks\app\Controllers\Purchasing.php(56): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ChakaNoks\system\CodeIgniter.php(933): App\Controllers\Purchasing->createRequest()
+#9 C:\xampp\htdocs\ChakaNoks\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Purchasing))
+#10 C:\xampp\htdocs\ChakaNoks\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\ChakaNoks\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\ChakaNoks\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\ChakaNoks\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+CRITICAL - 2025-12-15 18:28:30 --> ErrorException: foreach() argument must be of type array|object, string given
+[Method: POST, Route: purchasing/requests/create]
+in APPPATH\Controllers\Purchasing.php on line 43.
+ 1 APPPATH\Controllers\Purchasing.php(43): CodeIgniter\Debug\Exceptions->errorHandler(2, 'foreach() argument must be of type array|object, string given', 'C:\\xampp\\htdocs\\ChakaNoks\\app\\Controllers\\Purchasing.php', 43)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Purchasing->createRequest()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Purchasing))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-12-15 18:28:46 --> ErrorException: foreach() argument must be of type array|object, string given
+[Method: POST, Route: purchasing/requests/create]
+in APPPATH\Controllers\Purchasing.php on line 43.
+ 1 APPPATH\Controllers\Purchasing.php(43): CodeIgniter\Debug\Exceptions->errorHandler(2, 'foreach() argument must be of type array|object, string given', 'C:\\xampp\\htdocs\\ChakaNoks\\app\\Controllers\\Purchasing.php', 43)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Purchasing->createRequest()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Purchasing))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-12-15 18:30:53 --> ErrorException: foreach() argument must be of type array|object, string given
+[Method: POST, Route: purchasing/requests/create]
+in APPPATH\Controllers\Purchasing.php on line 43.
+ 1 APPPATH\Controllers\Purchasing.php(43): CodeIgniter\Debug\Exceptions->errorHandler(2, 'foreach() argument must be of type array|object, string given', 'C:\\xampp\\htdocs\\ChakaNoks\\app\\Controllers\\Purchasing.php', 43)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Purchasing->createRequest()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Purchasing))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-12-15 18:31:14 --> ErrorException: foreach() argument must be of type array|object, string given
+[Method: POST, Route: purchasing/requests/create]
+in APPPATH\Controllers\Purchasing.php on line 43.
+ 1 APPPATH\Controllers\Purchasing.php(43): CodeIgniter\Debug\Exceptions->errorHandler(2, 'foreach() argument must be of type array|object, string given', 'C:\\xampp\\htdocs\\ChakaNoks\\app\\Controllers\\Purchasing.php', 43)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Purchasing->createRequest()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Purchasing))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-12-15 18:47:39 --> ErrorException: foreach() argument must be of type array|object, string given
+[Method: POST, Route: purchasing/requests/create]
+in APPPATH\Controllers\Purchasing.php on line 43.
+ 1 APPPATH\Controllers\Purchasing.php(43): CodeIgniter\Debug\Exceptions->errorHandler(2, 'foreach() argument must be of type array|object, string given', 'C:\\xampp\\htdocs\\ChakaNoks\\app\\Controllers\\Purchasing.php', 43)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Purchasing->createRequest()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Purchasing))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-12-15 19:18:54 --> mysqli_sql_exception: Unknown column 'po.expected_delivery' in 'field list' in C:\xampp\htdocs\ChakaNoks\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ChakaNoks\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(po...', 0)
+#1 C:\xampp\htdocs\ChakaNoks\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(po...')
+#2 C:\xampp\htdocs\ChakaNoks\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(po...')
+#3 C:\xampp\htdocs\ChakaNoks\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(po...', Array, false)
+#4 C:\xampp\htdocs\ChakaNoks\app\Controllers\Purchasing.php(475): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\ChakaNoks\system\CodeIgniter.php(933): App\Controllers\Purchasing->getSupplierStats('1')
+#6 C:\xampp\htdocs\ChakaNoks\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Purchasing))
+#7 C:\xampp\htdocs\ChakaNoks\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\ChakaNoks\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\ChakaNoks\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\ChakaNoks\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2025-12-15 19:18:54 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'po.expected_delivery' in 'field list'
+[Method: GET, Route: purchasing/suppliers/1/stats]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(po.order_id) as total_orders, SUM(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivered_count, AVG(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivery_rate, AVG(DATEDIFF(d.delivered_at, po.expected_delivery)) as avg_days_late
+FROM `purchase_orders` `po`
+LEFT JOIN `deliveries` `d` ON `po`.`order_id` = `d`.`order_id`
+WHERE `po`.`supplier_id` = :po.supplier_id:', [...], false)
+ 2 APPPATH\Controllers\Purchasing.php(475): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Purchasing->getSupplierStats('1')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Purchasing))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-12-15 19:18:54 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'po.expected_delivery' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(po.order_id) as total_orders, SUM(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivered_count, AVG(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivery_rate, AVG(DATEDIFF(d.delivered_at, po.expected_delivery)) as avg_days_late
+FROM `purchase_orders` `po`
+LEFT JOIN `deliveries` `d` ON `po`.`order_id` = `d`.`order_id`
+WHERE `po`.`supplier_id` = \'1\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(po.order_id) as total_orders, SUM(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivered_count, AVG(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivery_rate, AVG(DATEDIFF(d.delivered_at, po.expected_delivery)) as avg_days_late
+FROM `purchase_orders` `po`
+LEFT JOIN `deliveries` `d` ON `po`.`order_id` = `d`.`order_id`
+WHERE `po`.`supplier_id` = \'1\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(po.order_id) as total_orders, SUM(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivered_count, AVG(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivery_rate, AVG(DATEDIFF(d.delivered_at, po.expected_delivery)) as avg_days_late
+FROM `purchase_orders` `po`
+LEFT JOIN `deliveries` `d` ON `po`.`order_id` = `d`.`order_id`
+WHERE `po`.`supplier_id` = :po.supplier_id:', [...], false)
+ 4 APPPATH\Controllers\Purchasing.php(475): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Purchasing->getSupplierStats('1')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Purchasing))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-12-15 19:18:54 --> [Caused by] mysqli_sql_exception: Unknown column 'po.expected_delivery' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(po.order_id) as total_orders, SUM(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivered_count, AVG(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivery_rate, AVG(DATEDIFF(d.delivered_at, po.expected_delivery)) as avg_days_late
+FROM `purchase_orders` `po`
+LEFT JOIN `deliveries` `d` ON `po`.`order_id` = `d`.`order_id`
+WHERE `po`.`supplier_id` = \'1\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(po.order_id) as total_orders, SUM(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivered_count, AVG(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivery_rate, AVG(DATEDIFF(d.delivered_at, po.expected_delivery)) as avg_days_late
+FROM `purchase_orders` `po`
+LEFT JOIN `deliveries` `d` ON `po`.`order_id` = `d`.`order_id`
+WHERE `po`.`supplier_id` = \'1\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(po.order_id) as total_orders, SUM(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivered_count, AVG(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivery_rate, AVG(DATEDIFF(d.delivered_at, po.expected_delivery)) as avg_days_late
+FROM `purchase_orders` `po`
+LEFT JOIN `deliveries` `d` ON `po`.`order_id` = `d`.`order_id`
+WHERE `po`.`supplier_id` = \'1\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(po.order_id) as total_orders, SUM(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivered_count, AVG(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivery_rate, AVG(DATEDIFF(d.delivered_at, po.expected_delivery)) as avg_days_late
+FROM `purchase_orders` `po`
+LEFT JOIN `deliveries` `d` ON `po`.`order_id` = `d`.`order_id`
+WHERE `po`.`supplier_id` = :po.supplier_id:', [...], false)
+ 5 APPPATH\Controllers\Purchasing.php(475): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Purchasing->getSupplierStats('1')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Purchasing))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-12-15 19:18:54 --> mysqli_sql_exception: Unknown column 'po.expected_delivery' in 'field list' in C:\xampp\htdocs\ChakaNoks\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ChakaNoks\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(po...', 0)
+#1 C:\xampp\htdocs\ChakaNoks\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(po...')
+#2 C:\xampp\htdocs\ChakaNoks\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(po...')
+#3 C:\xampp\htdocs\ChakaNoks\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(po...', Array, false)
+#4 C:\xampp\htdocs\ChakaNoks\app\Controllers\Purchasing.php(475): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\ChakaNoks\system\CodeIgniter.php(933): App\Controllers\Purchasing->getSupplierStats('4')
+#6 C:\xampp\htdocs\ChakaNoks\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Purchasing))
+#7 C:\xampp\htdocs\ChakaNoks\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\ChakaNoks\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\ChakaNoks\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\ChakaNoks\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2025-12-15 19:18:54 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'po.expected_delivery' in 'field list'
+[Method: GET, Route: purchasing/suppliers/4/stats]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(po.order_id) as total_orders, SUM(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivered_count, AVG(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivery_rate, AVG(DATEDIFF(d.delivered_at, po.expected_delivery)) as avg_days_late
+FROM `purchase_orders` `po`
+LEFT JOIN `deliveries` `d` ON `po`.`order_id` = `d`.`order_id`
+WHERE `po`.`supplier_id` = :po.supplier_id:', [...], false)
+ 2 APPPATH\Controllers\Purchasing.php(475): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Purchasing->getSupplierStats('4')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Purchasing))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-12-15 19:18:54 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'po.expected_delivery' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(po.order_id) as total_orders, SUM(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivered_count, AVG(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivery_rate, AVG(DATEDIFF(d.delivered_at, po.expected_delivery)) as avg_days_late
+FROM `purchase_orders` `po`
+LEFT JOIN `deliveries` `d` ON `po`.`order_id` = `d`.`order_id`
+WHERE `po`.`supplier_id` = \'4\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(po.order_id) as total_orders, SUM(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivered_count, AVG(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivery_rate, AVG(DATEDIFF(d.delivered_at, po.expected_delivery)) as avg_days_late
+FROM `purchase_orders` `po`
+LEFT JOIN `deliveries` `d` ON `po`.`order_id` = `d`.`order_id`
+WHERE `po`.`supplier_id` = \'4\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(po.order_id) as total_orders, SUM(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivered_count, AVG(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivery_rate, AVG(DATEDIFF(d.delivered_at, po.expected_delivery)) as avg_days_late
+FROM `purchase_orders` `po`
+LEFT JOIN `deliveries` `d` ON `po`.`order_id` = `d`.`order_id`
+WHERE `po`.`supplier_id` = :po.supplier_id:', [...], false)
+ 4 APPPATH\Controllers\Purchasing.php(475): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Purchasing->getSupplierStats('4')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Purchasing))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-12-15 19:18:54 --> [Caused by] mysqli_sql_exception: Unknown column 'po.expected_delivery' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(po.order_id) as total_orders, SUM(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivered_count, AVG(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivery_rate, AVG(DATEDIFF(d.delivered_at, po.expected_delivery)) as avg_days_late
+FROM `purchase_orders` `po`
+LEFT JOIN `deliveries` `d` ON `po`.`order_id` = `d`.`order_id`
+WHERE `po`.`supplier_id` = \'4\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(po.order_id) as total_orders, SUM(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivered_count, AVG(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivery_rate, AVG(DATEDIFF(d.delivered_at, po.expected_delivery)) as avg_days_late
+FROM `purchase_orders` `po`
+LEFT JOIN `deliveries` `d` ON `po`.`order_id` = `d`.`order_id`
+WHERE `po`.`supplier_id` = \'4\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(po.order_id) as total_orders, SUM(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivered_count, AVG(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivery_rate, AVG(DATEDIFF(d.delivered_at, po.expected_delivery)) as avg_days_late
+FROM `purchase_orders` `po`
+LEFT JOIN `deliveries` `d` ON `po`.`order_id` = `d`.`order_id`
+WHERE `po`.`supplier_id` = \'4\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(po.order_id) as total_orders, SUM(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivered_count, AVG(CASE WHEN po.status = "Delivered" THEN 1 ELSE 0 END) as delivery_rate, AVG(DATEDIFF(d.delivered_at, po.expected_delivery)) as avg_days_late
+FROM `purchase_orders` `po`
+LEFT JOIN `deliveries` `d` ON `po`.`order_id` = `d`.`order_id`
+WHERE `po`.`supplier_id` = :po.supplier_id:', [...], false)
+ 5 APPPATH\Controllers\Purchasing.php(475): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Purchasing->getSupplierStats('4')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Purchasing))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-12-15 19:22:43 --> ErrorException: foreach() argument must be of type array|object, string given
+[Method: POST, Route: purchasing/requests/create]
+in APPPATH\Controllers\Purchasing.php on line 43.
+ 1 APPPATH\Controllers\Purchasing.php(43): CodeIgniter\Debug\Exceptions->errorHandler(2, 'foreach() argument must be of type array|object, string given', 'C:\\xampp\\htdocs\\ChakaNoks\\app\\Controllers\\Purchasing.php', 43)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Purchasing->createRequest()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Purchasing))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))

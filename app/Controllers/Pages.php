@@ -384,7 +384,9 @@ $stockRecordModel->insert([
 
     public function branchTransfers()
     {
-        return view('branch/transfers');
+        $transferModel = new \App\Models\TransferModel();
+        $transfers = $transferModel->getTransfersWithBranchNames();
+        return view('branch/transfers', ['transfers' => $transfers]);
     }
 
     public function branchSettings()
@@ -508,10 +510,37 @@ $stockRecordModel->insert([
         $to = trim((string) $request->getPost('to_branch'));
         $item = trim((string) $request->getPost('item'));
         $quantity = (int) $request->getPost('quantity');
+
         if ($from === '' || $to === '' || $item === '' || $quantity <= 0) {
             return redirect()->back()->with('error', 'All fields are required.');
         }
-        $session->setFlashdata('success', 'Transfer request sent (simulation).');
+
+        // Get branch IDs from branch names
+        $branchModel = new \App\Models\BranchModel();
+        $fromBranch = $branchModel->getBranchByName($from);
+        $toBranch = $branchModel->getBranchByName($to);
+
+        if (!$fromBranch || !$toBranch) {
+            return redirect()->back()->with('error', 'Invalid branch names.');
+        }
+
+        // Create transfer record
+        $transferModel = new \App\Models\TransferModel();
+        $transferData = [
+            'from_branch_id' => $fromBranch['branch_id'],
+            'to_branch_id' => $toBranch['branch_id'],
+            'item_name' => $item,
+            'quantity' => $quantity,
+            'transfer_date' => date('Y-m-d H:i:s'),
+            'approved_by' => $session->get('user_id') ?? 1 // Default to user 1 if not logged in
+        ];
+
+        if ($transferModel->createTransfer($transferData)) {
+            $session->setFlashdata('success', 'Transfer created successfully!');
+        } else {
+            $session->setFlashdata('error', 'Failed to create transfer.');
+        }
+
         return redirect()->to(site_url('branch/transfers'));
     }
 

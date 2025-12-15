@@ -12,7 +12,7 @@ class PurchaseRequestItemModel extends Model
         'request_id',
         'item_name',
         'description',
-        'quantity',
+        'quantity_requested',
         'unit',
         'estimated_cost',
         'notes'
@@ -55,7 +55,7 @@ class PurchaseRequestItemModel extends Model
      */
     public function getItemsWithTotal($requestId)
     {
-        return $this->select('*, (quantity * estimated_cost) as item_total')
+        return $this->select('*, (quantity_requested * estimated_cost) as item_total')
                     ->where('request_id', $requestId)
                     ->findAll();
     }

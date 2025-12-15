@@ -23,7 +23,7 @@ class Purchasing extends ResourceController
     {
         $request = service('request');
         $session = session();
-        
+
         // Check role
         if (!in_array($session->get('role'), ['Branch Manager', 'Inventory Staff'])) {
             return $this->failForbidden('You do not have permission to create requests');
@@ -33,8 +33,27 @@ class Purchasing extends ResourceController
         $userId = $session->get('user_id');
         $items = $request->getPost('items') ?? [];
 
+        // Validate required fields
         if (empty($items)) {
-            return $this->fail('At least one item is required');
+            return $this->failValidationError('At least one item is required');
+        }
+
+        // Validate each item
+        $validationErrors = [];
+        foreach ($items as $index => $item) {
+            if (empty($item['item_name'])) {
+                $validationErrors[] = "Item #" . ($index + 1) . ": Item name is required";
+            }
+            if (!isset($item['quantity']) || $item['quantity'] <= 0) {
+                $validationErrors[] = "Item #" . ($index + 1) . ": Quantity must be greater than 0";
+            }
+            if (!isset($item['estimated_cost']) || $item['estimated_cost'] < 0) {
+                $validationErrors[] = "Item #" . ($index + 1) . ": Estimated cost must be a positive number";
+            }
+        }
+
+        if (!empty($validationErrors)) {
+            return $this->failValidationError(implode('; ', $validationErrors));
         }
 
         $model = new PurchaseRequestModel();
@@ -61,7 +80,7 @@ class Purchasing extends ResourceController
                     'request_id' => $requestId,
                     'item_name' => $item['item_name'] ?? '',
                     'description' => $item['description'] ?? '',
-                    'quantity' => (int)($item['quantity'] ?? 0),
+                    'quantity_requested' => (int)($item['quantity'] ?? 0),
                     'unit' => $item['unit'] ?? 'pcs',
                     'estimated_cost' => (float)($item['estimated_cost'] ?? 0),
                     'notes' => $item['notes'] ?? ''
@@ -73,7 +92,11 @@ class Purchasing extends ResourceController
 
             $db->transComplete();
 
-            return $this->respondCreated(['success' => true, 'request_id' => $requestId]);
+            return $this->respondCreated([
+                'success' => true,
+                'request_id' => $requestId,
+                'message' => 'Purchase request created successfully'
+            ]);
         } catch (\Exception $e) {
             return $this->fail('Failed to create request: ' . $e->getMessage());
         }
@@ -181,13 +204,13 @@ class Purchasing extends ResourceController
             $totalAmount = 0;
 
             foreach ($items as $item) {
-                $itemTotal = $item['quantity'] * $item['estimated_cost'];
+                $itemTotal = $item['quantity_requested'] * $item['estimated_cost'];
                 $totalAmount += $itemTotal;
 
                 $orderItemModel->addItem([
                     'order_id' => $orderId,
                     'item_name' => $item['item_name'],
-                    'quantity' => $item['quantity'],
+                    'quantity' => $item['quantity_requested'],
                     'unit_price' => $item['estimated_cost'],
                     'total_price' => $itemTotal
                 ]);
