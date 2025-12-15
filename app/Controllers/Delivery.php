@@ -14,13 +14,15 @@ class Delivery extends ResourceController {
      */
     public function index()
     {
-        $model = new DeliveryModel();
-        $deliveries = $model->select('d.*, po.status as order_status, s.supplier_name, u.email')
-                            ->join('purchase_orders po', 'd.order_id = po.order_id', 'left')
-                            ->join('suppliers s', 'po.supplier_id = s.supplier_id', 'left')
-                            ->join('users u', 'd.logistics_id = u.user_id', 'left')
-                            ->orderBy('d.scheduled_date', 'ASC')
-                            ->findAll();
+        $db = \Config\Database::connect();
+        $deliveries = $db->table('deliveries d')
+                         ->select('d.*, po.status as order_status, s.supplier_name, u.email')
+                         ->join('purchase_orders po', 'd.order_id = po.order_id', 'left')
+                         ->join('suppliers s', 'po.supplier_id = s.supplier_id', 'left')
+                         ->join('users u', 'd.logistics_id = u.user_id', 'left')
+                         ->orderBy('d.scheduled_date', 'ASC')
+                         ->get()
+                         ->getResultArray();
         return $this->respond($deliveries);
     }
 

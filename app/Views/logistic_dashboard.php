@@ -32,6 +32,7 @@
 			try {
 				const response = await fetch('<?= site_url('delivery') ?>');
 				const shipments = await response.json();
+				console.log('Shipments loaded:', shipments);
 				const tbody = document.getElementById('shipmentsTableBody');
 				tbody.innerHTML = '';
 
@@ -61,7 +62,7 @@
 				}
 			} catch (error) {
 				console.error('Error loading shipments:', error);
-				document.getElementById('shipmentsTableBody').innerHTML = '<tr><td colspan="6" style="text-align: center; color: red; padding: 20px;">Error loading shipments. Please refresh the page.</td></tr>';
+				document.getElementById('shipmentsTableBody').innerHTML = '<tr><td colspan="6" style="text-align: center; color: red; padding: 20px;">Error loading shipments. Please refresh the page. Error: ' + error.message + '</td></tr>';
 			}
 		}
 
@@ -129,21 +130,31 @@
 			formMessage.innerHTML = '<span style="color: #f59e0b;">Creating shipment...</span>';
 
 			try {
+				const dateStr = scheduledDate.replace('T', ' ') + ':00';
+				const payload = new URLSearchParams({
+					order_id: orderId,
+					scheduled_date: dateStr,
+					status: status
+				});
+				
+				console.log('Sending payload:', {
+					order_id: orderId,
+					scheduled_date: dateStr,
+					status: status
+				});
+
 				const response = await fetch('<?= site_url('delivery/create') ?>', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/x-www-form-urlencoded',
 					},
-					body: new URLSearchParams({
-						order_id: orderId,
-						scheduled_date: scheduledDate.replace('T', ' ') + ':00',
-						status: status
-					})
+					body: payload
 				});
 
 				const data = await response.json();
+				console.log('Response:', data, 'Status:', response.status);
 
-				if (response.ok) {
+				if (response.ok || data.success) {
 					formMessage.innerHTML = '<span style="color: #10b981;">✓ Shipment created successfully!</span>';
 					setTimeout(() => {
 						closeAddShipmentModal();
@@ -153,6 +164,7 @@
 					formMessage.innerHTML = '<span style="color: #ef4444;">✗ Error: ' + (data.messages || data.message || 'Failed to create shipment') + '</span>';
 				}
 			} catch (error) {
+				console.error('Submission error:', error);
 				formMessage.innerHTML = '<span style="color: #ef4444;">✗ Error: ' + error.message + '</span>';
 			}
 		});
